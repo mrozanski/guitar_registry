@@ -105,7 +105,7 @@ uv run python image_processor.py image.jpg manufacturer 0197bdb2-23c1-72ad-b5b1-
 psql -d guitar_registry -c "SELECT id, name FROM manufacturers WHERE name LIKE '%Fender%';"
 
 # Upload logo
-uv run python simple_image_processor.py fender-logo.png manufacturer 0197bdb2-23c1-72ad-b5b1-c77f67d4896c \
+uv run python image_processor.py fender-logo.png manufacturer 0197bdb2-23c1-72ad-b5b1-c77f67d4896c \
   --image-type logo --is-primary --caption "Fender Musical Instruments Corporation Logo"
 ```
 
@@ -116,7 +116,7 @@ uv run python simple_image_processor.py fender-logo.png manufacturer 0197bdb2-23
 psql -d guitar_registry -c "SELECT id, name, year FROM models WHERE name = 'Stratocaster' AND year = 1954;"
 
 # Upload image
-uv run python simple_image_processor.py 1954-stratocaster.jpg model 0197bda6-49cb-7642-b812-b7b1c2af7824 \
+uv run python image_processor.py 1954-stratocaster.jpg model 0197bda6-49cb-7642-b812-b7b1c2af7824 \
   --image-type primary --is-primary --caption "1954 Fender Stratocaster - The Original"
 ```
 
@@ -127,7 +127,7 @@ uv run python simple_image_processor.py 1954-stratocaster.jpg model 0197bda6-49c
 psql -d guitar_registry -c "SELECT id, serial_number FROM individual_guitars WHERE serial_number = '12345';"
 
 # Upload serial number image
-uv run python simple_image_processor.py serial-12345.jpg individual_guitar 0197bda6-49cb-7642-b812-b7b1c2af7824 \
+uv run python image_processor.py serial-12345.jpg individual_guitar 0197bda6-49cb-7642-b812-b7b1c2af7824 \
   --image-type serial_number --caption "Serial Number: 12345"
 ```
 
@@ -135,7 +135,7 @@ uv run python simple_image_processor.py serial-12345.jpg individual_guitar 0197b
 
 ```bash
 # Upload model image and create duplicate for manufacturer
-uv run python simple_image_processor.py stratocaster.jpg model 0197bda6-49cb-7642-b812-b7b1c2af7824 \
+uv run python image_processor.py stratocaster.jpg model 0197bda6-49cb-7642-b812-b7b1c2af7824 \
   --image-type primary --is-primary --caption "1954 Stratocaster" \
   --create-duplicate "manufacturer:0197bdb2-23c1-72ad-b5b1-c77f67d4896c" \
   --duplicate-reason "Represents manufacturer as flagship example"

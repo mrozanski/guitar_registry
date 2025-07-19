@@ -1,0 +1,618 @@
+[
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson Guitar Corporation",
+      "model_name_fallback": "Les Paul Standard",
+      "year_estimate": "1988",
+      "serial_number": "81088043",
+      "significance_level": "historic",
+      "significance_notes": "Slash's main guitar 'Jessica' - used on tour with Guns N' Roses, Velvet Revolver, and current GNR reunions. Features cigarette burn from road wear. Originally brighter cherry sunburst, refinished to duller finish.",
+      "current_estimated_value": 100000.0,
+      "condition_rating": "relic",
+      "modifications": "Refinished from brighter cherry sunburst to duller finish. Has medium neck and three-piece top. Cigarette burn mark from dropping cigarette.",
+      "provenance_notes": "Acquired by Slash in 1988 during Guns N' Roses tour. Called 'Jessica' by Slash.",
+      "description": "Faded cherry sunburst Les Paul Standard with medium neck and three-piece top"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson Custom Shop",
+      "model_name_fallback": "Les Paul Custom",
+      "description": "Black Les Paul Custom with rosewood neck, custom order",
+      "significance_level": "notable",
+      "significance_notes": "Custom order placed by Slash with Gibson Custom Shop, built with rosewood neck because Slash finds ebony necks 'too bright for everyday use'. Toured with both Guns N' Roses and Slash featuring Myles Kennedy and The Conspirators.",
+      "current_estimated_value": 25000.0,
+      "condition_rating": "excellent",
+      "modifications": "Rosewood neck (custom specification instead of standard ebony)"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson Custom Shop",
+      "model_name_fallback": "Firebird Prototype #2",
+      "description": "Off-white Firebird prototype developed with Gibson Custom Shop",
+      "significance_level": "custom",
+      "significance_notes": "Prototype Firebird model developed by Slash with Gibson Custom Shop for his signature line. Modified to address issues with mini humbuckers on stage.",
+      "current_estimated_value": 30000.0,
+      "condition_rating": "excellent",
+      "modifications": "Seymour Duncan pickups replacing mini humbuckers, modified neck profile"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "First Slash Model Les Paul",
+      "description": "Flame top Les Paul without pickguard, early signature model",
+      "significance_level": "historic",
+      "significance_notes": "One of Slash's first signature models made with Gibson, based on guitar from Chicago NAMM show. Gibson made a few with Slash's name on truss rod cover.",
+      "current_estimated_value": 15000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Based on guitar seen at Chicago NAMM show that looked like Slash's guitars. Slash no longer owns one."
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson Custom Shop",
+      "model_name_fallback": "Original Snakepit Les Paul",
+      "description": "Black Les Paul with snake inlays on neck and hand-carved painted details",
+      "significance_level": "historic",
+      "significance_notes": "Custom guitar made by Gibson for Slash's Snakepit band with snake inlay on neck and hand-carved details. Used on road with Snakepit. Part of limited run of maybe 20 or fewer guitars.",
+      "current_estimated_value": 40000.0,
+      "condition_rating": "excellent",
+      "modifications": "Snake inlay on neck, hand-carved and painted details",
+      "provenance_notes": "Custom made for Snakepit, limited run production. Slash wishes he had more."
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "Korina Flying V",
+      "year_estimate": "1958",
+      "significance_level": "historic",
+      "significance_notes": "Used to record 'Knocking on Heaven's Door' for Use Your Illusion album. Featured in 'The Beauty of the Burst' book. Purchased for $250,000.",
+      "current_estimated_value": 300000.0,
+      "condition_rating": "excellent",
+      "modifications": "Pickup covers were already removed when Slash acquired the guitar",
+      "provenance_notes": "Purchased from Albert Molinaro before Use Your Illusion recording for $250,000"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "Korina Explorer",
+      "year_estimate": "1958",
+      "significance_level": "historic",
+      "significance_notes": "One of two 1958 Gibson Korina Explorers purchased along with the 1958 Flying V. Extremely rare vintage instrument.",
+      "current_estimated_value": 280000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Purchased along with 1958 Korina Flying V"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson Murphy Lab",
+      "model_name_fallback": "Korina Flying V",
+      "year_estimate": "2020s",
+      "description": "Murphy Lab 1958 Korina Flying V reissue",
+      "significance_level": "notable",
+      "significance_notes": "Modern reissue of the famous 1958 Korina Flying V, part of Gibson's Murphy Lab aged series.",
+      "current_estimated_value": 8000.0,
+      "condition_rating": "excellent"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson Murphy Lab",
+      "model_name_fallback": "Korina Explorer",
+      "year_estimate": "2020s",
+      "description": "Murphy Lab 1958 Korina Explorer reissue",
+      "significance_level": "notable",
+      "significance_notes": "Modern reissue of the famous 1958 Korina Explorer, part of Gibson's Murphy Lab aged series.",
+      "current_estimated_value": 8000.0,
+      "condition_rating": "excellent"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson Custom Shop",
+      "model_name_fallback": "Jimi Hendrix Psychedelic Flying V",
+      "year_estimate": "2021",
+      "significance_level": "notable",
+      "significance_notes": "Christmas gift from Slash's significant other Megan in 2021. Used on Slash's most recent album released in 2022.",
+      "current_estimated_value": 12000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Christmas gift from Megan in 2021"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "Les Paul Standard",
+      "year_estimate": "1959",
+      "description": "Dark burst 1959 Les Paul featured in 'The Beauty of the Burst'",
+      "significance_level": "historic",
+      "significance_notes": "Featured in 'The Beauty of the Burst' book. Acquired from someone reluctant to sell but was persuaded when they realized Slash would use it to fill void left by returning Joe Perry Les Paul.",
+      "current_estimated_value": 450000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Acquired to replace returned Joe Perry Les Paul"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "BC Rich",
+      "model_name_fallback": "B Series Mockingbird",
+      "year_estimate": "1980",
+      "description": "Black Mockingbird with Floyd Rose tremolo system",
+      "significance_level": "historic",
+      "significance_notes": "Used to record 'You Could Be Mine' and toured during Use Your Illusion tour. Currently being used again with Guns N' Roses reunion.",
+      "current_estimated_value": 15000.0,
+      "condition_rating": "good",
+      "modifications": "Floyd Rose tremolo system, active electronics bypassed for passive use",
+      "provenance_notes": "Purchased from acquaintance on the street in 1989 or 1990"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "BC Rich",
+      "model_name_fallback": "Mockingbird 10-string",
+      "description": "Green 10-string Mockingbird custom made by BC Rich",
+      "significance_level": "custom",
+      "significance_notes": "Custom 10-string Mockingbird made by BC Rich for Slash. Used on stage with Guns N' Roses.",
+      "current_estimated_value": 8000.0,
+      "condition_rating": "excellent",
+      "modifications": "Custom 10-string configuration"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "BC Rich",
+      "model_name_fallback": "Mockingbird",
+      "description": "Red Mockingbird",
+      "significance_level": "notable",
+      "significance_notes": "One of Slash's collection of BC Rich Mockingbirds from the late 1980s.",
+      "current_estimated_value": 5000.0,
+      "condition_rating": "good",
+      "provenance_notes": "Purchased from friend in 1989 or 1990 on Highland Boulevard"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "BC Rich",
+      "model_name_fallback": "Mockingbird short-horn",
+      "year_estimate": "1977-1978",
+      "description": "First 'good' electric guitar owned by Slash",
+      "significance_level": "historic",
+      "significance_notes": "Slash's first 'good' electric guitar, a short-horn Mockingbird model from 1977 or 1978. Significant as his introduction to quality electric guitars.",
+      "current_estimated_value": 8000.0,
+      "condition_rating": "good",
+      "provenance_notes": "Slash's first quality electric guitar"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Travis Bean",
+      "year_estimate": "1979",
+      "description": "Natural finish archtop model, heaviest of three Travis Bean guitars",
+      "significance_level": "notable",
+      "significance_notes": "One of Slash's oldest electric guitars, owned since before Guns N' Roses formation. Used primarily for slide playing. Heaviest of his three Travis Bean guitars because it's an archtop.",
+      "current_estimated_value": 8000.0,
+      "condition_rating": "good",
+      "provenance_notes": "Owned since before Guns N' Roses, one of three Travis Bean guitars"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Fender",
+      "model_name_fallback": "Bass VI",
+      "year_estimate": "1962-1963",
+      "description": "Three-tone sunburst Bass VI",
+      "significance_level": "notable",
+      "significance_notes": "Used to beef up parts in recordings and specifically featured on 'Welcome to the Jungle'.",
+      "current_estimated_value": 8500.0,
+      "condition_rating": "very_good",
+      "provenance_notes": "Purchased from Norm's Rare Guitars"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "Les Paul Standard",
+      "year_estimate": "1988",
+      "description": "Black Les Paul Standard, same year as 'Jessica'",
+      "significance_level": "notable",
+      "significance_notes": "Recently acquired Les Paul from same year as his famous 'Jessica' guitar, with serial number almost identical.",
+      "current_estimated_value": 15000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Recently acquired, same year and similar serial number to 'Jessica'"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Guild",
+      "model_name_fallback": "Crossroads double neck",
+      "description": "Natural finish with 6-string acoustic neck on top, 6-string electric neck on bottom",
+      "significance_level": "custom",
+      "significance_notes": "Custom design developed by Slash with Guild. One of two guitars (natural and black) for touring rigs. Primarily used for 'Civil War'.",
+      "current_estimated_value": 12000.0,
+      "condition_rating": "excellent",
+      "modifications": "Custom Slash design: 6-string acoustic top, 6-string electric bottom"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Guild",
+      "model_name_fallback": "Crossroads double neck",
+      "description": "Black finish with 6-string acoustic neck on top, 6-string electric neck on bottom",
+      "significance_level": "custom",
+      "significance_notes": "Custom design developed by Slash with Guild. One of two guitars (natural and black) for touring rigs. Primarily used for 'Civil War'.",
+      "current_estimated_value": 12000.0,
+      "condition_rating": "excellent",
+      "modifications": "Custom Slash design: 6-string acoustic top, 6-string electric bottom"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Guild",
+      "model_name_fallback": "Crossroads double neck 12-string",
+      "description": "Green finish with 12-string acoustic neck on top, 6-string electric neck on bottom",
+      "significance_level": "custom",
+      "significance_notes": "Another variation of Slash's custom Guild Crossroads design, featuring 12-string acoustic on top and 6-string electric on bottom.",
+      "current_estimated_value": 12000.0,
+      "condition_rating": "excellent",
+      "modifications": "Custom Slash design: 12-string acoustic top, 6-string electric bottom"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Kris Derrig",
+      "model_name_fallback": "Les Paul replica",
+      "year_estimate": "1986",
+      "description": "Tobacco sunburst Les Paul replica built by luthier Kris Derrig",
+      "significance_level": "historic",
+      "significance_notes": "Called 'The Derrig' by Slash, used on almost every record he's made. Main guitar during Guns N' Roses first US tour. Acquired through manager Alan Niven.",
+      "current_estimated_value": 50000.0,
+      "condition_rating": "relic",
+      "provenance_notes": "Acquired through manager Alan Niven. Slash never met luthier Kris Derrig who made it."
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson Custom Shop",
+      "model_name_fallback": "Slash Model",
+      "year_estimate": "2003-2004",
+      "description": "Tobacco sunburst Slash signature model",
+      "significance_level": "historic",
+      "significance_notes": "Slash's first full production line of guitars with Gibson. Originally had piezo pickup system removed by Slash. Main guitar for Velvet Revolver period.",
+      "current_estimated_value": 8000.0,
+      "condition_rating": "excellent",
+      "modifications": "Piezo pickup system removed",
+      "provenance_notes": "First full production Slash signature line with Gibson"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson Custom Shop",
+      "model_name_fallback": "Slash Model Brazilian Dream",
+      "description": "Trans green prototype with Brazilian rosewood neck",
+      "significance_level": "custom",
+      "significance_notes": "Prototype for Slash's Brazilian Dream Les Paul signature model. Used for Living the Dream tour and in B rig for Guns N' Roses.",
+      "current_estimated_value": 15000.0,
+      "condition_rating": "excellent",
+      "modifications": "Brazilian rosewood neck (prototype specification)"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "Les Paul Standard",
+      "year_estimate": "1958",
+      "description": "Dark burst 1958 Les Paul, two-piece top",
+      "significance_level": "historic",
+      "significance_notes": "First sunburst Les Paul with two-piece top. Gibson did a replica of it. Slash says it sounds 'fucking great'.",
+      "current_estimated_value": 400000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Gibson made replicas of this guitar"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "Les Paul Standard",
+      "year_estimate": "1959",
+      "description": "1959 Les Paul purchased from Albert Molinaro",
+      "significance_level": "historic",
+      "significance_notes": "Another 1959 Les Paul from Slash's collection, purchased from Albert Molinaro.",
+      "current_estimated_value": 400000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Purchased from Albert Molinaro"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "Les Paul Goldtop",
+      "year_estimate": "1956",
+      "significance_level": "historic",
+      "significance_notes": "Used on the album 'Living the Dream'. Vintage Goldtop from the mid-1950s.",
+      "current_estimated_value": 25000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Used for Living the Dream album recording"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "Les Paul Goldtop",
+      "year_estimate": "1958",
+      "significance_level": "historic",
+      "significance_notes": "Purchased from Norm's Rare Guitars after seeing it on 'Guitar of the Day'. Another vintage Goldtop in Slash's collection.",
+      "current_estimated_value": 30000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Purchased from Norm's Rare Guitars, seen on 'Guitar of the Day'"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "Les Paul Standard",
+      "year_estimate": "1959",
+      "description": "Go-to 1959 Les Paul for studio recording",
+      "significance_level": "historic",
+      "significance_notes": "Slash's go-to 1959 Les Paul for studio recording. Used on Living the Dream album and recording of 'Rocket Man'.",
+      "current_estimated_value": 450000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Primary studio recording guitar"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson",
+      "model_name_fallback": "EDS-1275 double neck",
+      "year_estimate": "1967",
+      "description": "Black double neck guitar with 12-string and 6-string necks",
+      "significance_level": "notable",
+      "significance_notes": "Used to play 'Heaven's Door'. Classic Gibson double neck model purchased used.",
+      "current_estimated_value": 18000.0,
+      "condition_rating": "very_good",
+      "provenance_notes": "Purchased used"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Gibson Custom Shop",
+      "model_name_fallback": "Victoria",
+      "year_estimate": "2022",
+      "description": "Goldtop inspired by stolen 1957 darkback Les Paul Goldtop",
+      "significance_level": "custom",
+      "significance_notes": "Named 'Victoria' after the person who stole the original 1957 darkback Les Paul Goldtop that inspired this guitar.",
+      "current_estimated_value": 12000.0,
+      "condition_rating": "excellent",
+      "provenance_notes": "Inspired by stolen 1957 Les Paul, named after the thief"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Unknown",
+      "model_name_fallback": "Spanish flamenco acoustic",
+      "description": "Uncle's guitar found in closet with one string",
+      "significance_level": "historic",
+      "significance_notes": "Slash's uncle's guitar that he found in a closet with only one string. Guitar where Slash learned his first riffs.",
+      "current_estimated_value": 500.0,
+      "condition_rating": "poor",
+      "provenance_notes": "Found in uncle's closet, Slash's first guitar experience"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Memphis",
+      "model_name_fallback": "Les Paul copy",
+      "description": "Sunburst Les Paul copy, eventually destroyed",
+      "significance_level": "historic",
+      "significance_notes": "Traded from Memphis Explorer copy. Slash said it was unplayable and eventually put it through a wall. Part of his early guitar journey.",
+      "current_estimated_value": 200.0,
+      "condition_rating": "poor",
+      "modifications": "Eventually destroyed by putting through wall",
+      "provenance_notes": "Traded from Memphis Explorer copy, destroyed due to being unplayable"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Memphis",
+      "model_name_fallback": "Explorer copy",
+      "description": "First electric guitar, traded for Les Paul copy",
+      "significance_level": "historic",
+      "significance_notes": "Slash's first electric guitar. He was uncomfortable with the Explorer shape and traded it for a Memphis Les Paul copy.",
+      "current_estimated_value": 200.0,
+      "condition_rating": "fair",
+      "provenance_notes": "Slash's first electric guitar, traded away due to uncomfortable shape"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  },
+  {
+    "individual_guitar": {
+      "manufacturer_name_fallback": "Guild",
+      "model_name_fallback": "Acoustic guitar",
+      "description": "Natural finish acoustic guitar with bolted tailpiece",
+      "significance_level": "notable",
+      "significance_notes": "Acquired from people Slash babysat for as a teenager. Notable for its unusual bolted tailpiece construction.",
+      "current_estimated_value": 800.0,
+      "condition_rating": "fair",
+      "modifications": "Tailpiece held on with bolts",
+      "provenance_notes": "Acquired from babysitting clients during teenage years"
+    },
+    "source_attribution": {
+      "source_name": "Gibson TV (The Collection: Slash)",
+      "source_type": "website",
+      "reliability_score": 8
+    }
+  }
+]
