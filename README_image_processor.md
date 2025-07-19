@@ -6,12 +6,12 @@ A simplified image processing script that uploads images to Cloudinary and saves
 
 ```bash
 # Basic upload
-uv run python simple_image_processor.py <image_file> <entity_type> <entity_id> [options]
+uv run python image_processor.py <image_file> <entity_type> <entity_id> [options]
 
 # Examples
-uv run python simple_image_processor.py logo.png manufacturer 0197bdb2-23c1-72ad-b5b1-c77f67d4896c --image-type logo --is-primary
-uv run python simple_image_processor.py guitar.jpg model 0197bda6-49cb-7642-b812-b7b1c2af7824 --image-type primary --is-primary --caption "1954 Stratocaster"
-uv run python simple_image_processor.py serial.jpg individual_guitar 0197bda6-49cb-7642-b812-b7b1c2af7824 --image-type serial_number
+uv run python image_processor.py logo.png manufacturer 0197bdb2-23c1-72ad-b5b1-c77f67d4896c --image-type logo --is-primary
+uv run python image_processor.py guitar.jpg model 0197bda6-49cb-7642-b812-b7b1c2af7824 --image-type primary --is-primary --caption "1954 Stratocaster"
+uv run python image_processor.py serial.jpg individual_guitar 0197bda6-49cb-7642-b812-b7b1c2af7824 --image-type serial_number
 ```
 
 ## Setup
@@ -52,20 +52,20 @@ The script will automatically create a `cloudinary_config.json` template file on
 
 ```bash
 # Upload a manufacturer logo
-uv run python simple_image_processor.py fender-logo.png manufacturer 0197bdb2-23c1-72ad-b5b1-c77f67d4896c --image-type logo --is-primary --caption "Fender Logo"
+uv run python image_processor.py fender-logo.png manufacturer 01982004-3a25-75cf-832c-552b20e8975f --image-type logo --is-primary --caption "Fender Logo"
 
 # Upload a model image
-uv run python simple_image_processor.py stratocaster.jpg model 0197bda6-49cb-7642-b812-b7b1c2af7824 --image-type primary --is-primary --caption "1954 Stratocaster"
+uv run python image_processor.py stratocaster.jpg model 0197bda6-49cb-7642-b812-b7b1c2af7824 --image-type primary --is-primary --caption "1954 Stratocaster"
 
 # Upload an individual guitar image
-uv run python simple_image_processor.py guitar-serial.jpg individual_guitar 0197bda6-49cb-7642-b812-b7b1c2af7824 --image-type serial_number --caption "Serial Number Detail"
+uv run python image_processor.py guitar-serial.jpg individual_guitar 0197bda6-49cb-7642-b812-b7b1c2af7824 --image-type serial_number --caption "Serial Number Detail"
 ```
 
 ### Create Duplicates
 
 ```bash
 # Upload image and create duplicate for manufacturer
-uv run python simple_image_processor.py stratocaster.jpg model 0197bda6-49cb-7642-b812-b7b1c2af7824 \
+uv run python image_processor.py stratocaster.jpg model 0197bda6-49cb-7642-b812-b7b1c2af7824 \
   --image-type primary --is-primary --caption "1954 Stratocaster" \
   --create-duplicate "manufacturer:0197bdb2-23c1-72ad-b5b1-c77f67d4896c" \
   --duplicate-reason "Represents manufacturer as flagship example"
@@ -75,7 +75,7 @@ uv run python simple_image_processor.py stratocaster.jpg model 0197bda6-49cb-764
 
 ```bash
 # Use custom config files
-uv run python simple_image_processor.py image.jpg manufacturer 0197bdb2-23c1-72ad-b5b1-c77f67d4896c \
+uv run python image_processor.py image.jpg manufacturer 0197bdb2-23c1-72ad-b5b1-c77f67d4896c \
   --cloudinary-config my-cloudinary.json \
   --db-config my-database.json
 ```
