@@ -61,13 +61,10 @@ The Electric Guitar Registry addresses the fragmented landscape of vintage and c
 sudo apt-get install postgresql-contrib
 
 # Create database and user
-sudo -u postgres psql -c "
-CREATE USER guitar_registry_user WITH PASSWORD 'your_password';
-CREATE DATABASE guitar_registry OWNER guitar_registry_user;
-"
+psql -d postgres -c "CREATE DATABASE guitar_registry OWNER guitar_registry_user;"
 
 # Install required extensions
-sudo -u postgres psql guitar_registry -c "
+psql -d postgres -c "
 CREATE EXTENSION IF NOT EXISTS pg_uuidv7;
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 GRANT ALL PRIVILEGES ON DATABASE guitar_registry TO guitar_registry_user;

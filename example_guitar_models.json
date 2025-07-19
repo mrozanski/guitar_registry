@@ -1,0 +1,1480 @@
+[
+  {
+    "manufacturer": {
+      "name": "Fender Musical Instruments Corporation",
+      "country": "USA",
+      "founded_year": 1946,
+      "website": "https://www.fender.com",
+      "status": "active"
+    },
+    "source_attribution": {
+      "source_name": "Fender Guitar Database Compilation",
+      "source_type": "website",
+      "url": "https://findmyguitar.com/fender",
+      "reliability_score": 9
+    }
+  },
+  {
+    "manufacturer": {
+      "name": "Gibson Guitar Corporation",
+      "country": "USA", 
+      "founded_year": 1902,
+      "website": "https://www.gibson.com",
+      "status": "active"
+    },
+    "source_attribution": {
+      "source_name": "Gibson Model Database",
+      "source_type": "manufacturer_catalog",
+      "url": "https://www.gibson.com",
+      "reliability_score": 10
+    }
+  },
+  {
+    "manufacturer": {
+      "name": "Epiphone Company",
+      "country": "USA",
+      "founded_year": 1873,
+      "status": "acquired"
+    },
+    "source_attribution": {
+      "source_name": "Epiphone Historical Database",
+      "source_type": "website",
+      "url": "https://www.epiphone.com",
+      "reliability_score": 9
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "Stratocaster",
+      "year": 1954,
+      "production_type": "mass",
+      "msrp_original": 249.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Telecaster",
+      "name": "Telecaster",
+      "year": 1950,
+      "production_type": "mass",
+      "msrp_original": 189.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Telecaster",
+      "name": "Esquire",
+      "year": 1950,
+      "production_type": "mass",
+      "msrp_original": 149.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Precision Bass",
+      "name": "Precision Bass",
+      "year": 1951,
+      "production_type": "mass",
+      "msrp_original": 195.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "American Standard Stratocaster",
+      "year": 1987,
+      "production_type": "mass",
+      "msrp_original": 999.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "American Deluxe Stratocaster",
+      "year": 1999,
+      "production_type": "mass",
+      "msrp_original": 1599.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "Player Stratocaster",
+      "year": 2018,
+      "production_type": "mass",
+      "msrp_original": 649.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "Player Plus Stratocaster",
+      "year": 2021,
+      "production_type": "mass",
+      "msrp_original": 899.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Telecaster",
+      "name": "American Standard Telecaster",
+      "year": 1988,
+      "production_type": "mass",
+      "msrp_original": 899.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Telecaster",
+      "name": "Player Telecaster",
+      "year": 2018,
+      "production_type": "mass",
+      "msrp_original": 599.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Telecaster",
+      "name": "American Ultra Telecaster",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 1999.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Jazzmaster",
+      "name": "Jazzmaster",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 329.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Jazzmaster",
+      "name": "American Professional Jazzmaster",
+      "year": 2017,
+      "production_type": "mass",
+      "msrp_original": 1499.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Jaguar",
+      "name": "Jaguar",
+      "year": 1962,
+      "production_type": "mass",
+      "msrp_original": 379.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Jaguar",
+      "name": "Player Jaguar",
+      "year": 2018,
+      "production_type": "mass",
+      "msrp_original": 799.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Mustang",
+      "name": "Mustang",
+      "year": 1964,
+      "production_type": "mass",
+      "msrp_original": 189.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Mustang",
+      "name": "Player Mustang",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 549.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Duo-Sonic",
+      "name": "Duo-Sonic",
+      "year": 1956,
+      "production_type": "mass",
+      "msrp_original": 149.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Musicmaster",
+      "name": "Musicmaster",
+      "year": 1956,
+      "production_type": "mass",
+      "msrp_original": 119.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Jazz Bass",
+      "name": "Jazz Bass",
+      "year": 1960,
+      "production_type": "mass",
+      "msrp_original": 279.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Jazz Bass",
+      "name": "American Standard Jazz Bass",
+      "year": 1988,
+      "production_type": "mass",
+      "msrp_original": 999.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Jazz Bass",
+      "name": "Player Jazz Bass",
+      "year": 2018,
+      "production_type": "mass",
+      "msrp_original": 699.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Precision Bass",
+      "name": "American Standard Precision Bass",
+      "year": 1988,
+      "production_type": "mass",
+      "msrp_original": 949.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Precision Bass",
+      "name": "Player Precision Bass",
+      "year": 2018,
+      "production_type": "mass",
+      "msrp_original": 649.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Bronco",
+      "name": "Bronco",
+      "year": 1967,
+      "production_type": "mass",
+      "msrp_original": 149.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Coronado",
+      "name": "Coronado I",
+      "year": 1966,
+      "production_type": "mass",
+      "msrp_original": 259.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Coronado",
+      "name": "Coronado II",
+      "year": 1966,
+      "production_type": "mass",
+      "msrp_original": 329.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Toronado",
+      "name": "Toronado",
+      "year": 1998,
+      "production_type": "limited",
+      "msrp_original": 699.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Cyclone",
+      "name": "Cyclone",
+      "year": 1998,
+      "production_type": "limited",
+      "msrp_original": 549.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Standard",
+      "year": 1952,
+      "production_type": "mass",
+      "msrp_original": 210.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Standard",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 247.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Standard",
+      "year": 1959,
+      "production_type": "mass",
+      "estimated_production_quantity": 1700,
+      "msrp_original": 247.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Custom",
+      "year": 1954,
+      "production_type": "mass",
+      "msrp_original": 325.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Junior",
+      "year": 1954,
+      "production_type": "mass",
+      "msrp_original": 120.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Special",
+      "year": 1955,
+      "production_type": "mass",
+      "msrp_original": 180.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Studio",
+      "year": 1983,
+      "production_type": "mass",
+      "msrp_original": 699.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "SG",
+      "name": "SG Standard",
+      "year": 1961,
+      "production_type": "mass",
+      "msrp_original": 245.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "SG",
+      "name": "SG Custom",
+      "year": 1963,
+      "production_type": "mass",
+      "msrp_original": 375.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "SG",
+      "name": "SG Junior",
+      "year": 1963,
+      "production_type": "mass",
+      "msrp_original": 155.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "SG",
+      "name": "SG Special",
+      "year": 1962,
+      "production_type": "mass",
+      "msrp_original": 205.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Flying V",
+      "name": "Flying V",
+      "year": 1958,
+      "production_type": "limited",
+      "estimated_production_quantity": 98,
+      "msrp_original": 247.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Explorer",
+      "name": "Explorer",
+      "year": 1958,
+      "production_type": "limited",
+      "estimated_production_quantity": 19,
+      "msrp_original": 247.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-335",
+      "name": "ES-335",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 267.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-345",
+      "name": "ES-345",
+      "year": 1959,
+      "production_type": "mass",
+      "msrp_original": 399.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-355",
+      "name": "ES-355",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 499.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-175",
+      "name": "ES-175",
+      "year": 1949,
+      "production_type": "mass",
+      "msrp_original": 175.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-150",
+      "name": "ES-150",
+      "year": 1936,
+      "production_type": "mass",
+      "msrp_original": 150.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-125",
+      "name": "ES-125",
+      "year": 1941,
+      "production_type": "mass",
+      "msrp_original": 125.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Firebird",
+      "name": "Firebird I",
+      "year": 1963,
+      "production_type": "limited",
+      "msrp_original": 189.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Firebird",
+      "name": "Firebird III",
+      "year": 1963,
+      "production_type": "limited",
+      "msrp_original": 275.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Firebird",
+      "name": "Firebird V",
+      "year": 1963,
+      "production_type": "limited",
+      "msrp_original": 335.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Firebird",
+      "name": "Firebird VII",
+      "year": 1963,
+      "production_type": "limited",
+      "msrp_original": 449.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Melody Maker",
+      "name": "Melody Maker",
+      "year": 1959,
+      "production_type": "mass",
+      "msrp_original": 120.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Thunderbird",
+      "name": "Thunderbird II",
+      "year": 1963,
+      "production_type": "mass",
+      "msrp_original": 245.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Thunderbird",
+      "name": "Thunderbird IV",
+      "year": 1963,
+      "production_type": "mass",
+      "msrp_original": 335.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "EB",
+      "name": "EB-0",
+      "year": 1959,
+      "production_type": "mass",
+      "msrp_original": 195.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "EB",
+      "name": "EB-2",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 225.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Marauder",
+      "name": "Marauder",
+      "year": 1975,
+      "production_type": "limited",
+      "msrp_original": 399.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "The Paul",
+      "name": "The Paul",
+      "year": 1978,
+      "production_type": "mass",
+      "msrp_original": 199.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "V-2",
+      "name": "V-2",
+      "year": 1979,
+      "production_type": "limited",
+      "msrp_original": 549.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Challenger",
+      "name": "Challenger I",
+      "year": 1983,
+      "production_type": "limited",
+      "msrp_original": 399.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Casino",
+      "name": "Casino",
+      "year": 1961,
+      "production_type": "mass",
+      "msrp_original": 315.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Sheraton",
+      "name": "Sheraton",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 395.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Riviera",
+      "name": "Riviera",
+      "year": 1962,
+      "production_type": "mass",
+      "msrp_original": 395.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Broadway",
+      "name": "Broadway",
+      "year": 1931,
+      "production_type": "mass",
+      "msrp_original": 175.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Emperor",
+      "name": "Emperor",
+      "year": 1936,
+      "production_type": "mass",
+      "msrp_original": 400.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Coronet",
+      "name": "Coronet",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 155.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Wilshire",
+      "name": "Wilshire",
+      "year": 1959,
+      "production_type": "mass",
+      "msrp_original": 189.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Crestwood",
+      "name": "Crestwood",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 225.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Professional",
+      "name": "Professional",
+      "year": 1962,
+      "production_type": "mass",
+      "msrp_original": 255.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Newport",
+      "name": "Newport",
+      "year": 1961,
+      "production_type": "mass",
+      "msrp_original": 225.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Olympic",
+      "name": "Olympic",
+      "year": 1960,
+      "production_type": "mass",
+      "msrp_original": 125.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "EB Bass",
+      "name": "EB-0 Bass",
+      "year": 1961,
+      "production_type": "mass",
+      "msrp_original": 185.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "EB Bass",
+      "name": "EB-2 Bass",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 265.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "HM Strat",
+      "name": "HM Strat",
+      "year": 1988,
+      "production_type": "limited",
+      "msrp_original": 799.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Performer",
+      "name": "Performer",
+      "year": 1985,
+      "production_type": "limited",
+      "msrp_original": 449.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Prodigy",
+      "name": "Prodigy",
+      "year": 1991,
+      "production_type": "limited",
+      "msrp_original": 399.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Showmaster",
+      "name": "Showmaster",
+      "year": 1998,
+      "production_type": "limited",
+      "msrp_original": 999.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "TC-90",
+      "name": "TC-90",
+      "year": 2004,
+      "production_type": "limited",
+      "msrp_original": 799.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Starcaster",
+      "name": "Starcaster",
+      "year": 1976,
+      "production_type": "limited",
+      "msrp_original": 649.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Bullet",
+      "name": "Bullet",
+      "year": 1981,
+      "production_type": "mass",
+      "msrp_original": 199.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Lead",
+      "name": "Lead I",
+      "year": 1979,
+      "production_type": "mass",
+      "msrp_original": 349.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Lead",
+      "name": "Lead II",
+      "year": 1979,
+      "production_type": "mass",
+      "msrp_original": 399.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "American Elite Stratocaster",
+      "year": 2016,
+      "production_type": "mass",
+      "msrp_original": 1899.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "American Professional Stratocaster",
+      "year": 2017,
+      "production_type": "mass",
+      "msrp_original": 1449.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "American Ultra Stratocaster",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 1999.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Telecaster",
+      "name": "American Elite Telecaster",
+      "year": 2016,
+      "production_type": "mass",
+      "msrp_original": 1899.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Telecaster",
+      "name": "American Professional Telecaster",
+      "year": 2017,
+      "production_type": "mass",
+      "msrp_original": 1449.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Jaguar",
+      "name": "American Professional Jaguar",
+      "year": 2017,
+      "production_type": "mass",
+      "msrp_original": 1549.99,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Bass VI",
+      "name": "Bass VI",
+      "year": 1961,
+      "production_type": "limited",
+      "msrp_original": 279.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Standard 50s",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 2499.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Standard 60s",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 2499.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Modern",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 2699.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Tribute",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 1199.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "SG",
+      "name": "SG Standard 61",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 1699.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "SG",
+      "name": "SG Modern",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 1899.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "SG",
+      "name": "SG Tribute",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 999.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-335",
+      "name": "ES-335 Dot",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 2799.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-335",
+      "name": "ES-335 Figured",
+      "year": 2019,
+      "production_type": "mass",
+      "msrp_original": 3499.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Flying V",
+      "name": "Flying V",
+      "year": 2019,
+      "production_type": "limited",
+      "msrp_original": 1999.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Explorer",
+      "name": "Explorer",
+      "year": 2019,
+      "production_type": "limited",
+      "msrp_original": 1999.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-339",
+      "name": "ES-339",
+      "year": 2007,
+      "production_type": "mass",
+      "msrp_original": 2299.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-330",
+      "name": "ES-330",
+      "year": 1959,
+      "production_type": "mass",
+      "msrp_original": 267.50,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Moderne",
+      "name": "Moderne",
+      "year": 1982,
+      "production_type": "limited",
+      "estimated_production_quantity": 5,
+      "msrp_original": 1500.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Robot Guitar",
+      "name": "Robot Les Paul",
+      "year": 2007,
+      "production_type": "limited",
+      "msrp_original": 2499.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Lucille",
+      "name": "B.B. King Lucille",
+      "year": 1980,
+      "production_type": "limited",
+      "msrp_original": 1599.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Dove",
+      "name": "Dove",
+      "year": 1962,
+      "production_type": "mass",
+      "msrp_original": 380.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Hummingbird",
+      "name": "Hummingbird",
+      "year": 1960,
+      "production_type": "mass",
+      "msrp_original": 310.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "J-45",
+      "name": "J-45",
+      "year": 1942,
+      "production_type": "mass",
+      "msrp_original": 45.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "J-200",
+      "name": "J-200",
+      "year": 1937,
+      "production_type": "mass",
+      "msrp_original": 200.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Standard",
+      "year": 1988,
+      "production_type": "mass",
+      "msrp_original": 399.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Custom",
+      "year": 1989,
+      "production_type": "mass",
+      "msrp_original": 499.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Les Paul",
+      "name": "Les Paul Studio",
+      "year": 1995,
+      "production_type": "mass",
+      "msrp_original": 349.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "SG",
+      "name": "SG Standard",
+      "year": 1998,
+      "production_type": "mass",
+      "msrp_original": 299.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "SG",
+      "name": "SG G-400",
+      "year": 2000,
+      "production_type": "mass",
+      "msrp_original": 399.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Dot",
+      "name": "Dot",
+      "year": 1997,
+      "production_type": "mass",
+      "msrp_original": 399.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Texan",
+      "name": "Texan",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 175.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Caballero",
+      "name": "Caballero",
+      "year": 1963,
+      "production_type": "mass",
+      "msrp_original": 135.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Frontier",
+      "name": "Frontier",
+      "year": 1958,
+      "production_type": "mass",
+      "msrp_original": 225.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Epiphone Company",
+      "product_line_name": "Hummingbird",
+      "name": "Hummingbird",
+      "year": 2005,
+      "production_type": "mass",
+      "msrp_original": 299.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "Eric Clapton Stratocaster",
+      "year": 1988,
+      "production_type": "limited",
+      "msrp_original": 1170.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "Stevie Ray Vaughan Stratocaster",
+      "year": 1992,
+      "production_type": "limited",
+      "msrp_original": 1299.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Stratocaster",
+      "name": "Jeff Beck Stratocaster",
+      "year": 1991,
+      "production_type": "limited",
+      "msrp_original": 1199.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Telecaster",
+      "name": "Bruce Springsteen Telecaster",
+      "year": 2003,
+      "production_type": "limited",
+      "msrp_original": 2499.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Fender Musical Instruments Corporation",
+      "product_line_name": "Telecaster",
+      "name": "Danny Gatton Telecaster",
+      "year": 1990,
+      "production_type": "limited",
+      "msrp_original": 1599.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Jimmy Page Les Paul",
+      "year": 1995,
+      "production_type": "limited",
+      "msrp_original": 4999.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Slash Les Paul",
+      "year": 1997,
+      "production_type": "limited",
+      "msrp_original": 3499.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "SG",
+      "name": "Angus Young SG",
+      "year": 2000,
+      "production_type": "limited",
+      "msrp_original": 2799.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "ES-335",
+      "name": "BB King Lucille",
+      "year": 1981,
+      "production_type": "limited",
+      "msrp_original": 1899.00,
+      "currency": "USD"
+    }
+  },
+  {
+    "model": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "product_line_name": "Les Paul",
+      "name": "Peter Frampton Les Paul",
+      "year": 2007,
+      "production_type": "limited",
+      "msrp_original": 4599.00,
+      "currency": "USD"
+    }
+  }
+]
