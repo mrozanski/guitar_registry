@@ -39,6 +39,7 @@ import traceback
 
 # Import the processor classes (assuming they're in the same directory)
 from uniqueness_management_system import GuitarDataProcessor, GuitarDataValidator
+from image_processing_module import process_guitar_with_photos
 
 class DatabaseConfig:
     """Database connection configuration."""
@@ -186,34 +187,99 @@ class GuitarProcessorCLI:
                         print(f"         • {conflict}")
     
     def process_file(self, file_path: str):
-        """Process a JSON file containing guitar data."""
+        """Process a JSON file containing guitar data with support for relative image paths."""
         # Load data
         data = self.load_json_file(file_path)
         if data is None:
             return False
+        
+        # Load Cloudinary config for image processing
+        cloudinary_config = None
+        try:
+            with open('cloudinary_config.json', 'r') as f:
+                cloudinary_config = json.load(f)
+            if self.verbose:
+                print(f"✓ Loaded Cloudinary config")
+        except Exception as e:
+            if self.verbose:
+                print(f"⚠ Could not load Cloudinary config: {e}")
+        
+        # Establish working directory context from input file location
+        # The working directory should be the JSON file's parent directory
+        # So paths in JSON are relative to the JSON file location
+        working_dir = Path(file_path).parent
         
         # Process data
         print(f"\n🎸 Processing guitar data...")
         start_time = datetime.now()
         
         try:
-            result = self.processor.process_submission(data)
-            
-            # Calculate processing time
-            end_time = datetime.now()
-            processing_time = (end_time - start_time).total_seconds()
-            
-            # Print results
-            self.print_result_summary(result)
-            print(f"\n⏱ Processing completed in {processing_time:.2f} seconds")
-            
-            return result.get('success', False)
-            
+            # Pass working directory for relative path resolution
+            if isinstance(data, list):
+                # Batch processing
+                results = []
+                for idx, item in enumerate(data):
+                    if self.verbose:
+                        print(f"  Processing item {idx + 1}/{len(data)}...")
+                    
+                    result = process_guitar_with_photos(
+                        item, 
+                        working_dir=working_dir,
+                        db_connection=self.db_connection,
+                        processor=self.processor,
+                        cloudinary_config=cloudinary_config
+                    )
+                    results.append(result)
+                
+                # Create batch summary
+                successful = sum(1 for r in results if r.get('success'))
+                failed = len(results) - successful
+                processed_images = sum(r.get('image_count', 0) for r in results)
+                
+                batch_result = {
+                    'success': failed == 0,
+                    'processed_count': len(results),
+                    'total_count': len(data),
+                    'summary': {
+                        'successful': successful,
+                        'failed': failed,
+                        'images_processed': processed_images
+                    },
+                    'results': results
+                }
+                
+                if self.verbose:
+                    print(f"✓ Processed {processed_images} images across {len(results)} items")
+                
+                self.print_result_summary(batch_result)
+                return batch_result['success']
+                
+            else:
+                # Single item processing
+                result = process_guitar_with_photos(
+                    data, 
+                    working_dir=working_dir,
+                    db_connection=self.db_connection,
+                    processor=self.processor,
+                    cloudinary_config=cloudinary_config
+                )
+                
+                if self.verbose:
+                    print(f"✓ Processed {result.get('image_count', 0)} images")
+                
+                self.print_result_summary(result)
+                return result.get('success', False)
+                
         except Exception as e:
-            print(f"✗ Processing failed with error: {e}")
+            print(f"✗ Processing failed: {e}")
             if self.verbose:
-                print(f"Traceback:\n{traceback.format_exc()}")
+                traceback.print_exc()
             return False
+        finally:
+            end_time = datetime.now()
+            duration = (end_time - start_time).total_seconds()
+            if self.verbose:
+                print(f"⏱ Processing completed in {duration:.2f} seconds")
     
     def interactive_mode(self):
         """Run in interactive mode for testing."""
@@ -241,7 +307,12 @@ class GuitarProcessorCLI:
                 
                 # Process the data
                 print("Processing...")
-                result = self.processor.process_submission(data)
+                result = process_guitar_with_photos(
+                    data,
+                    working_dir=Path.cwd(),
+                    db_connection=self.db_connection,
+                    processor=self.processor
+                )
                 self.print_result_summary(result)
                 
             except KeyboardInterrupt:

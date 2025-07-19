@@ -33,3 +33,5 @@ sample_*.json
 test_data/
 
 *.code-workspace
+
+test-data/

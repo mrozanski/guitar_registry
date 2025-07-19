@@ -122,7 +122,8 @@ INDIVIDUAL_GUITAR_SCHEMA = {
         "modifications": {"type": ["string", "null"]},
         "provenance_notes": {"type": ["string", "null"]},
         "specifications": {"type": ["object", "null"]},  # Individual-specific specs
-        "notable_associations": {"type": ["array", "null"]}  # Array of association objects
+        "notable_associations": {"type": ["array", "null"]},  # Array of association objects
+        "photos": {"type": ["array", "null"]}  # Array of photo objects for image processing
     },
     # Require either model_reference OR fallback manufacturer + (model OR description)
     "anyOf": [

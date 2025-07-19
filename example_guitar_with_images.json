@@ -1,0 +1,56 @@
+{
+  "manufacturer": {
+    "name": "Gibson Guitar Corporation",
+    "country": "USA",
+    "founded_year": 1902,
+    "status": "active",
+    "logo_source": "./logos/gibson-logo.png"
+  },
+  "model": {
+    "manufacturer_name": "Gibson Guitar Corporation",
+    "product_line_name": "Les Paul",
+    "name": "Les Paul Standard",
+    "year": 1959,
+    "production_type": "mass",
+    "msrp_original": 247.50,
+    "currency": "USD"
+  },
+  "individual_guitar": {
+    "model_reference": {
+      "manufacturer_name": "Gibson Guitar Corporation",
+      "model_name": "Les Paul Standard",
+      "year": 1959
+    },
+    "serial_number": "9-0824",
+    "significance_level": "historic",
+    "significance_notes": "Famous 1959 Les Paul",
+    "current_estimated_value": 500000.00,
+    "photos": [
+      {
+        "source": "https://example.com/guitar-front.jpg",
+        "type": "body_front",
+        "caption": "Front view of Jessica",
+        "is_primary": true
+      },
+      {
+        "source": "./images/serial-number.jpg",
+        "type": "serial_number",
+        "caption": "Serial number close-up"
+      },
+      {
+        "source": "/absolute/path/headstock.png",
+        "type": "headstock"
+      },
+      {
+        "source": "https://example.com/guitar-back.jpg",
+        "type": "body_back",
+        "caption": "Back view showing beautiful flame maple"
+      }
+    ]
+  },
+  "source_attribution": {
+    "source_name": "Guitar Registry Test",
+    "source_type": "manual_entry",
+    "reliability_score": 9
+  }
+} 
