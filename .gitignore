@@ -2,6 +2,9 @@
 db_config.json
 .env
 
+# Cloudinary config
+cloudinary_config.json
+
 # Python
 __pycache__/
 *.pyc
