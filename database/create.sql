@@ -69,10 +69,20 @@ CREATE TABLE models (
     UNIQUE(manufacturer_id, name, year)
 );
 
--- Individual guitars table
+-- Individual guitars table with hybrid FK + fallback approach
 CREATE TABLE individual_guitars (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
+    
+    -- Foreign key reference (optional - for complete data)
     model_id UUID REFERENCES models(id),
+    
+    -- Fallback text fields (for incomplete data)
+    manufacturer_name_fallback VARCHAR(100),
+    model_name_fallback VARCHAR(150),
+    year_estimate VARCHAR(50), -- Allows "circa 1959", "late 1950s", etc.
+    description TEXT, -- General description when model info is incomplete
+    
+    -- Guitar-specific fields
     serial_number VARCHAR(50),
     production_date DATE,
     production_number INTEGER,
@@ -85,6 +95,14 @@ CREATE TABLE individual_guitars (
     provenance_notes TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Ensure some form of identification exists
+    CONSTRAINT guitar_identification_required CHECK (
+        model_id IS NOT NULL OR 
+        (manufacturer_name_fallback IS NOT NULL AND 
+         (model_name_fallback IS NOT NULL OR description IS NOT NULL))
+    ),
+    
     UNIQUE(serial_number)
 );
 
@@ -377,6 +395,15 @@ CREATE INDEX idx_product_lines_name_pattern ON product_lines(name varchar_patter
 CREATE INDEX idx_models_full_lookup ON models(manufacturer_id, LOWER(name), year, production_type);
 CREATE INDEX idx_individual_guitars_lookup ON individual_guitars(model_id, serial_number, production_date) WHERE serial_number IS NOT NULL;
 
+-- Fallback lookup indexes for individual guitars
+CREATE INDEX idx_individual_guitars_fallback_lookup ON individual_guitars(
+    LOWER(manufacturer_name_fallback), 
+    LOWER(model_name_fallback), 
+    year_estimate
+) WHERE manufacturer_name_fallback IS NOT NULL;
+
+CREATE INDEX idx_individual_guitars_serial_lower ON individual_guitars(LOWER(serial_number)) WHERE serial_number IS NOT NULL;
+
 -- Specification indexes
 CREATE INDEX idx_specifications_body_wood ON specifications(body_wood) WHERE body_wood IS NOT NULL;
 CREATE INDEX idx_specifications_neck_wood ON specifications(neck_wood) WHERE neck_wood IS NOT NULL;
@@ -421,6 +448,11 @@ CREATE INDEX idx_contributions_table_record ON contributions(table_name, record_
 CREATE INDEX idx_manufacturers_active ON manufacturers(id, name) WHERE status = 'active' OR status IS NULL;
 CREATE INDEX idx_models_current_production ON models(id, manufacturer_id, name) WHERE production_end_date IS NULL;
 CREATE INDEX idx_individual_guitars_high_value ON individual_guitars(id, model_id) WHERE current_estimated_value > 10000;
+
+-- Additional individual guitars indexes for hybrid approach
+CREATE INDEX idx_individual_guitars_model_production ON individual_guitars(model_id, production_date) WHERE model_id IS NOT NULL;
+CREATE INDEX idx_individual_guitars_serial_unique ON individual_guitars(serial_number) WHERE serial_number IS NOT NULL;
+CREATE INDEX idx_individual_guitars_significance ON individual_guitars(significance_level, current_estimated_value);
 
 -- Partial indexes for performance
 CREATE INDEX idx_models_with_details ON models(manufacturer_id, year) 

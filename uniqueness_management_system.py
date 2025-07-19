@@ -93,8 +93,9 @@ MODEL_SCHEMA = {
 INDIVIDUAL_GUITAR_SCHEMA = {
     "type": "object",
     "properties": {
+        # Foreign key reference (optional - for complete data)
         "model_reference": {  # Will be resolved to model_id
-            "type": "object",
+            "type": ["object", "null"],
             "properties": {
                 "manufacturer_name": {"type": "string"},
                 "model_name": {"type": "string"}, 
@@ -103,6 +104,13 @@ INDIVIDUAL_GUITAR_SCHEMA = {
             "required": ["manufacturer_name", "model_name", "year"],
             "additionalProperties": False
         },
+        # Fallback text fields (for incomplete data)
+        "manufacturer_name_fallback": {"type": ["string", "null"], "maxLength": 100},
+        "model_name_fallback": {"type": ["string", "null"], "maxLength": 150},
+        "year_estimate": {"type": ["string", "null"], "maxLength": 50},  # "circa 1959", "late 1950s", etc.
+        "description": {"type": ["string", "null"]},  # General description when model info is incomplete
+        
+        # Guitar-specific fields
         "serial_number": {"type": ["string", "null"], "maxLength": 50},
         "production_date": {"type": ["string", "null"], "format": "date"},
         "production_number": {"type": ["integer", "null"]},
@@ -116,7 +124,12 @@ INDIVIDUAL_GUITAR_SCHEMA = {
         "specifications": {"type": ["object", "null"]},  # Individual-specific specs
         "notable_associations": {"type": ["array", "null"]}  # Array of association objects
     },
-    "required": ["model_reference"],
+    # Require either model_reference OR fallback manufacturer + (model OR description)
+    "anyOf": [
+        {"required": ["model_reference"]},
+        {"required": ["manufacturer_name_fallback", "model_name_fallback"]},
+        {"required": ["manufacturer_name_fallback", "description"]}
+    ],
     "additionalProperties": False
 }
 
@@ -275,14 +288,15 @@ class GuitarDataValidator:
         
         return sorted(matches, key=lambda x: x[1], reverse=True)
     
-    def find_individual_guitar_matches(self, guitar_data: Dict, model_id: str) -> List[Tuple[str, float, Dict]]:
-        """Find potential individual guitar matches."""
+    def find_individual_guitar_matches(self, guitar_data: Dict, model_id: Optional[str]) -> List[Tuple[str, float, Dict]]:
+        """Find potential individual guitar matches using both FK and fallback approaches."""
         serial_number = guitar_data.get('serial_number', '')
         
-        # Serial number is the primary unique identifier
+        # Serial number is the primary unique identifier (works for both FK and fallback)
         if serial_number:
             query = """
-                SELECT id, serial_number, model_id, significance_level
+                SELECT id, serial_number, model_id, manufacturer_name_fallback, 
+                       model_name_fallback, year_estimate, significance_level
                 FROM individual_guitars
                 WHERE serial_number = %s
             """
@@ -292,15 +306,47 @@ class GuitarDataValidator:
             if existing:
                 return [(existing['id'], 1.0, dict(existing))]
         
-        # If no serial number match, look for other similarities
-        query = """
-            SELECT id, serial_number, production_date, significance_level
-            FROM individual_guitars
-            WHERE model_id = %s
-        """
-        self.cursor.execute(query, (model_id,))
-        existing_guitars = self.cursor.fetchall()
+        # Different search strategies based on whether we have model_id or fallback data
+        if model_id:
+            # FK-based search: look for guitars with the same model_id
+            query = """
+                SELECT id, serial_number, production_date, significance_level,
+                       manufacturer_name_fallback, model_name_fallback, year_estimate
+                FROM individual_guitars
+                WHERE model_id = %s
+            """
+            self.cursor.execute(query, (model_id,))
+            existing_guitars = self.cursor.fetchall()
+        else:
+            # Fallback-based search: look for guitars with similar fallback text
+            manufacturer_fallback = guitar_data.get('manufacturer_name_fallback', '')
+            model_fallback = guitar_data.get('model_name_fallback', '')
+            year_estimate = guitar_data.get('year_estimate', '')
+            
+            if not manufacturer_fallback:
+                return []  # Can't match without at least manufacturer
+            
+            query = """
+                SELECT id, serial_number, production_date, significance_level,
+                       manufacturer_name_fallback, model_name_fallback, year_estimate
+                FROM individual_guitars
+                WHERE manufacturer_name_fallback IS NOT NULL
+                AND LOWER(manufacturer_name_fallback) = LOWER(%s)
+            """
+            params = [manufacturer_fallback]
+            
+            if model_fallback:
+                query += " AND LOWER(model_name_fallback) = LOWER(%s)"
+                params.append(model_fallback)
+            
+            if year_estimate:
+                query += " AND year_estimate = %s"
+                params.append(year_estimate)
+            
+            self.cursor.execute(query, params)
+            existing_guitars = self.cursor.fetchall()
         
+        # Calculate similarity scores for potential matches
         matches = []
         production_date = guitar_data.get('production_date')
         
@@ -309,9 +355,22 @@ class GuitarDataValidator:
             
             # Date similarity
             if production_date and existing['production_date']:
-                # Could implement date proximity logic here
                 if production_date == str(existing['production_date']):
                     confidence += 0.5
+            
+            # For fallback matches, add text similarity scoring
+            if not model_id and existing.get('manufacturer_name_fallback'):
+                confidence += 0.3  # Base score for manufacturer match
+                
+                if (guitar_data.get('model_name_fallback') and 
+                    existing.get('model_name_fallback') and
+                    guitar_data.get('model_name_fallback').lower() == existing.get('model_name_fallback').lower()):
+                    confidence += 0.4  # Model name match
+                
+                if (guitar_data.get('year_estimate') and 
+                    existing.get('year_estimate') and
+                    guitar_data.get('year_estimate') == existing.get('year_estimate')):
+                    confidence += 0.3  # Year estimate match
                     
             if confidence >= 0.5:
                 matches.append((existing['id'], confidence, dict(existing)))
@@ -422,32 +481,10 @@ class GuitarDataValidator:
         except jsonschema.ValidationError as e:
             return ValidationResult(False, "invalid_schema", conflicts=[str(e)])
         
-        # Resolve model
-        model_ref = data.get('model_reference', {})
-        manufacturer_name = model_ref.get('manufacturer_name')
-        model_name = model_ref.get('model_name')
-        year = model_ref.get('year')
+        # Try to resolve model_id (hybrid approach)
+        model_id = self._resolve_model_reference(data)
         
-        query = """
-            SELECT m.id 
-            FROM models m 
-            JOIN manufacturers mfr ON m.manufacturer_id = mfr.id
-            WHERE LOWER(mfr.name) = LOWER(%s) 
-            AND LOWER(m.name) = LOWER(%s) 
-            AND m.year = %s
-        """
-        self.cursor.execute(query, (manufacturer_name, model_name, year))
-        model = self.cursor.fetchone()
-        
-        if not model:
-            return ValidationResult(
-                False, "missing_dependency",
-                conflicts=[f"Model '{manufacturer_name} {model_name} {year}' not found"]
-            )
-        
-        model_id = model['id']
-        
-        # Find guitar matches
+        # Find guitar matches (works with both FK and fallback data)
         matches = self.find_individual_guitar_matches(data, model_id)
         
         if not matches:
@@ -465,6 +502,31 @@ class GuitarDataValidator:
             )
         else:
             return ValidationResult(True, "insert", confidence=1.0)
+    
+    def _resolve_model_reference(self, data: Dict) -> Optional[str]:
+        """
+        Try to resolve model_reference to model_id, return None if using fallback approach.
+        """
+        model_ref = data.get('model_reference')
+        if not model_ref:
+            return None  # Using fallback fields
+        
+        manufacturer_name = model_ref.get('manufacturer_name')
+        model_name = model_ref.get('model_name')
+        year = model_ref.get('year')
+        
+        query = """
+            SELECT m.id 
+            FROM models m 
+            JOIN manufacturers mfr ON m.manufacturer_id = mfr.id
+            WHERE LOWER(mfr.name) = LOWER(%s) 
+            AND LOWER(m.name) = LOWER(%s) 
+            AND m.year = %s
+        """
+        self.cursor.execute(query, (manufacturer_name, model_name, year))
+        model = self.cursor.fetchone()
+        
+        return model['id'] if model else None
 
 class GuitarDataProcessor:
     """Main class for processing guitar data submissions."""
@@ -772,36 +834,33 @@ class GuitarDataProcessor:
     
     def _insert_individual_guitar(self, data: Dict) -> str:
         """Insert new individual guitar and return ID."""
-        # Resolve model_id from model_reference
-        model_ref = data.get('model_reference', {})
-        manufacturer_name = model_ref.get('manufacturer_name')
-        model_name = model_ref.get('model_name')
-        year = model_ref.get('year')
+        # Try to resolve model_id using hybrid approach
+        model_id = self.validator._resolve_model_reference(data)
         
         query = """
-            SELECT m.id 
-            FROM models m 
-            JOIN manufacturers mfr ON m.manufacturer_id = mfr.id
-            WHERE LOWER(mfr.name) = LOWER(%s) 
-            AND LOWER(m.name) = LOWER(%s) 
-            AND m.year = %s
-        """
-        self.cursor.execute(query, (manufacturer_name, model_name, year))
-        model = self.cursor.fetchone()
-        model_id = model['id']
-        
-        query = """
-            INSERT INTO individual_guitars (model_id, serial_number, production_date, production_number,
-                                          significance_level, significance_notes, current_estimated_value,
-                                          condition_rating, modifications, provenance_notes)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO individual_guitars (
+                model_id, manufacturer_name_fallback, model_name_fallback, year_estimate, description,
+                serial_number, production_date, production_number, significance_level, significance_notes, 
+                current_estimated_value, condition_rating, modifications, provenance_notes
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
-            model_id, data.get('serial_number'), data.get('production_date'),
-            data.get('production_number'), data.get('significance_level'),
-            data.get('significance_notes'), data.get('current_estimated_value'),
-            data.get('condition_rating'), data.get('modifications'), data.get('provenance_notes')
+            model_id, 
+            data.get('manufacturer_name_fallback'), 
+            data.get('model_name_fallback'),
+            data.get('year_estimate'), 
+            data.get('description'),
+            data.get('serial_number'), 
+            data.get('production_date'),
+            data.get('production_number'), 
+            data.get('significance_level'),
+            data.get('significance_notes'), 
+            data.get('current_estimated_value'),
+            data.get('condition_rating'), 
+            data.get('modifications'), 
+            data.get('provenance_notes')
         )
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
@@ -930,10 +989,23 @@ class GuitarDataProcessor:
     
     def _update_individual_guitar(self, guitar_id: str, data: Dict):
         """Update existing individual guitar with new data."""
-        # Merge logic for individual guitars
+        # Merge logic for individual guitars - include new fallback fields
         update_fields = []
         values = []
         
+        # Handle model_id update if we can resolve it
+        model_id = self.validator._resolve_model_reference(data)
+        if model_id is not None:
+            update_fields.append("model_id = %s")
+            values.append(model_id)
+        
+        # Update fallback fields if provided
+        for field in ['manufacturer_name_fallback', 'model_name_fallback', 'year_estimate', 'description']:
+            if data.get(field) is not None:
+                update_fields.append(f"{field} = %s")
+                values.append(data[field])
+        
+        # Update other guitar fields
         for field in ['production_date', 'production_number', 'significance_notes', 
                      'current_estimated_value', 'condition_rating', 'modifications', 'provenance_notes']:
             if data.get(field) is not None:
