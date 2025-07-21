@@ -35,3 +35,5 @@ test_data/
 *.code-workspace
 
 test-data/
+history/
+database/pg_uuidv7/

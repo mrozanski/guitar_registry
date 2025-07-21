@@ -273,6 +273,11 @@ class GuitarDataValidator:
         
         matches = []
         for existing in existing_models:
+            # For guitar models, year is critical - skip if years don't match
+            # This prevents "Firebird III 1976" from matching "Firebird I 1963"
+            if year and existing['year'] and year != existing['year']:
+                continue
+            
             # Name similarity
             name_similarity = self.calculate_similarity(name, existing['name'])
             

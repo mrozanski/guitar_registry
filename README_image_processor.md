@@ -187,3 +187,12 @@ After uploading images, you can:
 2. **Create more duplicates**: Use the `create_duplicate` function
 3. **Add image sources**: Add attribution information to `image_sources` table
 4. **Build UI**: Use the image URLs to display images in your application 
+
+## Example for finding if a model has a primary image
+
+```sql
+  SELECT i.id, i.entity_type, i.entity_id, i.image_type, i.is_primary, i.caption, i.original_url
+  FROM images i
+  WHERE i.entity_type = 'model'
+  AND i.entity_id = '019820af-3caf-73d0-90ce-700d3f4a1f70'
+```
