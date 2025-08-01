@@ -63,7 +63,8 @@ MANUFACTURER_SCHEMA = {
         "founded_year": {"type": ["integer", "null"], "minimum": 1800, "maximum": 2030},
         "website": {"type": ["string", "null"], "format": "uri"},
         "status": {"type": "string", "enum": ["active", "defunct", "acquired"], "default": "active"},
-        "notes": {"type": ["string", "null"]}
+        "notes": {"type": ["string", "null"]},
+        "logo_source": {"type": ["string", "null"]}
     },
     "required": ["name"],
     "additionalProperties": False

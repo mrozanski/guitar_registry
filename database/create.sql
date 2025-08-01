@@ -148,7 +148,7 @@ CREATE TABLE finishes (
            (model_id IS NULL AND individual_guitar_id IS NOT NULL))
 );
 
--- Notable owners/players
+-- Notable owners/players and historical events
 CREATE TABLE notable_associations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     individual_guitar_id UUID REFERENCES individual_guitars(id),
@@ -160,8 +160,61 @@ CREATE TABLE notable_associations (
     notable_performances TEXT,
     verification_status VARCHAR(20) DEFAULT 'unverified' CHECK (verification_status IN ('verified', 'likely', 'claimed', 'unverified')),
     verification_source TEXT,
+    
+    -- Historical events fields
+    event_type VARCHAR(50) DEFAULT 'ownership' CHECK (event_type IN ('ownership', 'performance', 'recording', 'tv_appearance', 'photo_session', 'auction')),
+    event_title VARCHAR(200),
+    event_description TEXT,
+    event_date DATE,
+    venue_name VARCHAR(200),
+    recording_title VARCHAR(200),
+    
+    -- Attestation simulation fields
+    evidence_url VARCHAR(500),
+    evidence_hash VARCHAR(64),
+    attestation_uid VARCHAR(66),
+    attestor_name VARCHAR(100),
+    attestor_relationship VARCHAR(50),
+    
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Expert reviews table for attestations
+CREATE TABLE expert_reviews (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
+    reviewer_name VARCHAR(100) NOT NULL,
+    reviewer_credentials TEXT,
+    review_title VARCHAR(200) NOT NULL,
+    review_summary TEXT NOT NULL,
+    content_type VARCHAR(50) DEFAULT 'review' CHECK (content_type IN ('review', 'comparison', 'overview')),
+    
+    -- Ratings (optional for some content types)
+    condition_rating INTEGER CHECK (condition_rating BETWEEN 1 AND 10),
+    build_quality_rating INTEGER CHECK (build_quality_rating BETWEEN 1 AND 10),
+    value_rating INTEGER CHECK (value_rating BETWEEN 1 AND 10),
+    overall_rating INTEGER CHECK (overall_rating BETWEEN 1 AND 10),
+    
+    -- Attestation simulation fields
+    original_content_url VARCHAR(500), -- YouTube/source URL
+    content_archived BOOLEAN DEFAULT FALSE,
+    content_hash VARCHAR(64), -- Simulated IPFS hash
+    attestation_uid VARCHAR(66), -- Simulated EAS UID
+    verification_status VARCHAR(20) DEFAULT 'pending' CHECK (verification_status IN ('pending', 'verified', 'disputed')),
+    
+    -- Metadata
+    review_date DATE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Junction table for many-to-many model relationships
+CREATE TABLE review_model_associations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
+    review_id UUID REFERENCES expert_reviews(id) ON DELETE CASCADE,
+    model_id UUID REFERENCES models(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(review_id, model_id)
 );
 
 -- Data sources and citations
@@ -317,7 +370,7 @@ CREATE TABLE images (
     ),
     CONSTRAINT valid_entity_type CHECK (
         entity_type IN ('manufacturer', 'product_line', 'model', 'individual_guitar', 
-                       'specification', 'finish', 'notable_association')
+                       'specification', 'finish', 'notable_association', 'expert_review')
     ),
     CONSTRAINT valid_image_type CHECK (
         image_type IN ('primary', 'logo', 'gallery', 'headstock', 'serial_number', 
@@ -422,6 +475,19 @@ CREATE INDEX idx_notable_associations_person_lower ON notable_associations(LOWER
 CREATE INDEX idx_notable_associations_type ON notable_associations(association_type);
 CREATE INDEX idx_notable_associations_verification ON notable_associations(verification_status);
 CREATE INDEX idx_notable_associations_period ON notable_associations(period_start, period_end) WHERE period_start IS NOT NULL;
+CREATE INDEX idx_notable_associations_event_type ON notable_associations(event_type);
+CREATE INDEX idx_notable_associations_event_date ON notable_associations(event_date) WHERE event_date IS NOT NULL;
+CREATE INDEX idx_notable_associations_attestor ON notable_associations(attestor_name) WHERE attestor_name IS NOT NULL;
+
+-- Expert reviews indexes
+CREATE INDEX idx_expert_reviews_reviewer ON expert_reviews(reviewer_name);
+CREATE INDEX idx_expert_reviews_verification ON expert_reviews(verification_status);
+CREATE INDEX idx_expert_reviews_type ON expert_reviews(content_type);
+CREATE INDEX idx_expert_reviews_date ON expert_reviews(review_date);
+
+-- Review model associations indexes
+CREATE INDEX idx_review_model_associations_review ON review_model_associations(review_id);
+CREATE INDEX idx_review_model_associations_model ON review_model_associations(model_id);
 
 -- Market valuations indexes
 CREATE INDEX idx_market_valuations_model_date ON market_valuations(model_id, valuation_date) WHERE model_id IS NOT NULL;
@@ -500,6 +566,7 @@ CREATE TRIGGER update_models_updated_at BEFORE UPDATE ON models FOR EACH ROW EXE
 CREATE TRIGGER update_individual_guitars_updated_at BEFORE UPDATE ON individual_guitars FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_notable_associations_updated_at BEFORE UPDATE ON notable_associations FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_expert_reviews_updated_at BEFORE UPDATE ON expert_reviews FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================================================
 -- IMAGE MANAGEMENT FUNCTIONS AND VIEWS

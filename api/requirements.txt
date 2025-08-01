@@ -1,0 +1,5 @@
+# Flask API dependencies for Guitar Registry Search API
+flask>=3.0.0
+flask-cors>=4.0.0
+psycopg2>=2.9.10
+jsonschema>=4.24.0
