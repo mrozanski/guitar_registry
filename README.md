@@ -57,24 +57,43 @@ The Electric Guitar Registry addresses the fragmented landscape of vintage and c
 ### 1. Database Setup
 
 ```bash
-# Install PostgreSQL extensions
-sudo apt-get install postgresql-contrib
+# Install postgres if not installed
+brew install postgresql@17
 
 # Create database and user
 psql -d postgres -c "CREATE DATABASE guitar_registry OWNER guitar_registry_user;"
 
+# Start postgres
+brew services start postgresql@17
+
+# Create user
+psql -d postgres -c "CREATE USER guitar_registry_user WITH PASSWORD 'password_here';"
+
 # Install required extensions
-psql -d postgres -c "
-CREATE EXTENSION IF NOT EXISTS pg_uuidv7;
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
-GRANT ALL PRIVILEGES ON DATABASE guitar_registry TO guitar_registry_user;
-GRANT ALL PRIVILEGES ON SCHEMA public TO guitar_registry_user;
-"
+cd database
+git clone https://github.com/fboulnois/pg_uuidv7
+cd pg_uuidv7
+make
+make install
 
-# Create schema
-psql -U guitar_registry_user -d guitar_registry -f create.sql
+## Grant privileges
+psql -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE guitar_registry TO guitar_registry_user;
+GRANT ALL PRIVILEGES ON SCHEMA public TO guitar_registry_user;"
+
+
+## Create extensions
+psql -U guitar_registry_user -d guitar_registry -c "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
+psql -d guitar_registry -c "CREATE EXTENSION IF NOT EXISTS \"pg_uuidv7\";"
+
+## Create structure
+psql -U guitar_registry_user -d guitar_registry -f database/create.sql
+
+## Insert test data (test data not in git)
+psql -U guitar_registry_user -d guitar_registry -f test-data/test-data.sql
+
+
+
 ```
-
 ### 2. Environment Configuration
 
 ```bash
