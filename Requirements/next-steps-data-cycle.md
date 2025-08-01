@@ -126,3 +126,8 @@ The `test-data/` directory contains:
 4. **Ensure proper dependency order** (manufacturers → product_lines → models → individual_guitars)
 
 **All the identified JSON files have valid structure and can be safely used as templates for generating new test data.**
+
+Update 2025-08-01
+There are inconsistencies in the test data I'm using.
+Run the script to cycle data, then run test-data/data_only_backup_20250728.sql
+Check erorrs and either remove the offending statements, or fix them.
