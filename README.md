@@ -212,7 +212,7 @@ python guitar_processor_cli.py --file vintage_collection.json
 - **finishes**: Colors and finish types
 
 ### Supporting Tables
-- **notable_associations**: Famous players and performances
+
 - **market_valuations**: Historical pricing data
 - **data_sources**: Source attribution and reliability
 - **citations**: Data lineage tracking

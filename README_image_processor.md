@@ -84,7 +84,7 @@ uv run python image_processor.py image.jpg manufacturer 0197bdb2-23c1-72ad-b5b1-
 
 **Required Arguments:**
 - `image_path`: Path to the image file
-- `entity_type`: Type of entity (manufacturer, model, individual_guitar, product_line, specification, finish, notable_association)
+- `entity_type`: Type of entity (manufacturer, model, individual_guitar, product_line, specification, finish)
 - `entity_id`: UUID of the entity
 
 **Optional Arguments:**
