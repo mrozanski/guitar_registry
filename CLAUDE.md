@@ -66,7 +66,7 @@ python main.py
 - **models**: Specific model-year combinations
 - **individual_guitars**: Historically significant instruments
 - **specifications**: Technical specifications and features
-- **notable_associations**: Famous players and performances
+
 - **market_valuations**: Historical pricing data
 - **data_sources**: Source attribution and reliability scoring
 

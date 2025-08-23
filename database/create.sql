@@ -148,38 +148,6 @@ CREATE TABLE finishes (
            (model_id IS NULL AND individual_guitar_id IS NOT NULL))
 );
 
--- Notable owners/players and historical events
-CREATE TABLE notable_associations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    individual_guitar_id UUID REFERENCES individual_guitars(id),
-    person_name VARCHAR(100) NOT NULL,
-    association_type VARCHAR(50),
-    period_start DATE,
-    period_end DATE,
-    notable_songs TEXT,
-    notable_performances TEXT,
-    verification_status VARCHAR(20) DEFAULT 'unverified' CHECK (verification_status IN ('verified', 'likely', 'claimed', 'unverified')),
-    verification_source TEXT,
-    
-    -- Historical events fields
-    event_type VARCHAR(50) DEFAULT 'ownership' CHECK (event_type IN ('ownership', 'performance', 'recording', 'tv_appearance', 'photo_session', 'auction')),
-    event_title VARCHAR(200),
-    event_description TEXT,
-    event_date DATE,
-    venue_name VARCHAR(200),
-    recording_title VARCHAR(200),
-    
-    -- Attestation simulation fields
-    evidence_url VARCHAR(500),
-    evidence_hash VARCHAR(64),
-    attestation_uid VARCHAR(66),
-    attestor_name VARCHAR(100),
-    attestor_relationship VARCHAR(50),
-    
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Expert reviews table for attestations
 CREATE TABLE expert_reviews (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
@@ -370,7 +338,7 @@ CREATE TABLE images (
     ),
     CONSTRAINT valid_entity_type CHECK (
         entity_type IN ('manufacturer', 'product_line', 'model', 'individual_guitar', 
-                       'specification', 'finish', 'notable_association', 'expert_review')
+                       'specification', 'finish', 'expert_review')
     ),
     CONSTRAINT valid_image_type CHECK (
         image_type IN ('primary', 'logo', 'gallery', 'headstock', 'serial_number', 
@@ -427,7 +395,6 @@ CREATE INDEX idx_specifications_model ON specifications(model_id);
 CREATE INDEX idx_specifications_individual ON specifications(individual_guitar_id);
 CREATE INDEX idx_citations_cited_record ON citations(cited_table, cited_record_id);
 CREATE INDEX idx_market_valuations_date ON market_valuations(valuation_date);
-CREATE INDEX idx_notable_associations_guitar ON notable_associations(individual_guitar_id);
 
 -- Text search indexes (if pg_trgm extension is available)
 DO $$
@@ -469,15 +436,6 @@ CREATE INDEX idx_finishes_type ON finishes(finish_type) WHERE finish_type IS NOT
 CREATE INDEX idx_finishes_rarity ON finishes(rarity) WHERE rarity IS NOT NULL;
 CREATE INDEX idx_finishes_model ON finishes(model_id) WHERE model_id IS NOT NULL;
 CREATE INDEX idx_finishes_individual ON finishes(individual_guitar_id) WHERE individual_guitar_id IS NOT NULL;
-
--- Notable associations indexes
-CREATE INDEX idx_notable_associations_person_lower ON notable_associations(LOWER(person_name));
-CREATE INDEX idx_notable_associations_type ON notable_associations(association_type);
-CREATE INDEX idx_notable_associations_verification ON notable_associations(verification_status);
-CREATE INDEX idx_notable_associations_period ON notable_associations(period_start, period_end) WHERE period_start IS NOT NULL;
-CREATE INDEX idx_notable_associations_event_type ON notable_associations(event_type);
-CREATE INDEX idx_notable_associations_event_date ON notable_associations(event_date) WHERE event_date IS NOT NULL;
-CREATE INDEX idx_notable_associations_attestor ON notable_associations(attestor_name) WHERE attestor_name IS NOT NULL;
 
 -- Expert reviews indexes
 CREATE INDEX idx_expert_reviews_reviewer ON expert_reviews(reviewer_name);
@@ -565,7 +523,6 @@ CREATE TRIGGER update_product_lines_updated_at BEFORE UPDATE ON product_lines FO
 CREATE TRIGGER update_models_updated_at BEFORE UPDATE ON models FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_individual_guitars_updated_at BEFORE UPDATE ON individual_guitars FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_notable_associations_updated_at BEFORE UPDATE ON notable_associations FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_expert_reviews_updated_at BEFORE UPDATE ON expert_reviews FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================================================

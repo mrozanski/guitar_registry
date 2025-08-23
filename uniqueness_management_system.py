@@ -123,7 +123,6 @@ INDIVIDUAL_GUITAR_SCHEMA = {
         "modifications": {"type": ["string", "null"]},
         "provenance_notes": {"type": ["string", "null"]},
         "specifications": {"type": ["object", "null"]},  # Individual-specific specs
-        "notable_associations": {"type": ["array", "null"]},  # Array of association objects
         "photos": {"type": ["array", "null"]}  # Array of photo objects for image processing
     },
     # Require either model_reference OR fallback manufacturer + (model OR description)
@@ -183,22 +182,6 @@ SOURCE_ATTRIBUTION_SCHEMA = {
         "notes": {"type": ["string", "null"]}
     },
     "required": ["source_name"],
-    "additionalProperties": False
-}
-
-NOTABLE_ASSOCIATION_SCHEMA = {
-    "type": "object", 
-    "properties": {
-        "person_name": {"type": "string", "minLength": 1, "maxLength": 100},
-        "association_type": {"type": "string", "enum": ["owner", "player", "recorded_with", "performed_with"], "maxLength": 50},
-        "period_start": {"type": ["string", "null"], "format": "date"},
-        "period_end": {"type": ["string", "null"], "format": "date"},
-        "notable_songs": {"type": ["string", "null"]},
-        "notable_performances": {"type": ["string", "null"]},
-        "verification_status": {"type": "string", "enum": ["verified", "likely", "claimed", "unverified"], "default": "unverified"},
-        "verification_source": {"type": ["string", "null"]}
-    },
-    "required": ["person_name", "association_type"],
     "additionalProperties": False
 }
 
@@ -767,14 +750,6 @@ class GuitarDataProcessor:
                         spec_id = self._insert_specifications(submission_data['individual_guitar']['specifications'], 'individual_guitar', guitar_id)
                         results['ids_created']['guitar_specifications'] = spec_id
                     
-                    # Process notable associations if present
-                    if submission_data['individual_guitar'].get('notable_associations'):
-                        association_ids = []
-                        for assoc_data in submission_data['individual_guitar']['notable_associations']:
-                            assoc_id = self._insert_notable_association(assoc_data, guitar_id)
-                            association_ids.append(assoc_id)
-                        results['ids_created']['notable_associations'] = association_ids
-                        
                 elif guitar_result.action == "update":
                     guitar_id = guitar_result.target_id
                     if guitar_id is not None:
@@ -951,24 +926,6 @@ class GuitarDataProcessor:
         values = (
             model_id, individual_guitar_id, data.get('finish_name'),
             data.get('finish_type'), data.get('color_code'), data.get('rarity')
-        )
-        self.cursor.execute(query, values)
-        return self.cursor.fetchone()['id']
-    
-    def _insert_notable_association(self, data: Dict, guitar_id: str) -> str:
-        """Insert notable association for an individual guitar."""
-        query = """
-            INSERT INTO notable_associations (individual_guitar_id, person_name, association_type,
-                                            period_start, period_end, notable_songs, notable_performances,
-                                            verification_status, verification_source)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            RETURNING id
-        """
-        values = (
-            guitar_id, data.get('person_name'), data.get('association_type'),
-            data.get('period_start'), data.get('period_end'), data.get('notable_songs'),
-            data.get('notable_performances'), data.get('verification_status', 'unverified'),
-            data.get('verification_source')
         )
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
