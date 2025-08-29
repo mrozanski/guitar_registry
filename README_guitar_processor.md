@@ -49,7 +49,7 @@ A complete submission requires these top-level properties:
 ## 2. Model
 
 **Required fields:**
-- `manufacturer_name` (string): Will be matched case-insensitively against existing manufacturers
+- `manufacturer_name` (string): Will be matched case-insensitively against existing manufacturers. **IMPORTANT:** The manufacturer must already exist in the database or be included in the same submission.
 - `name` (string, 1-150 chars): Model name as it appears in catalogs
 - `year` (integer, 1900-2030): Year the model was introduced
 
@@ -102,13 +102,14 @@ A complete submission requires these top-level properties:
 
 ## 3. Individual Guitar
 
-**Required fields (choose one of these three combinations):**
+**CRITICAL: You must provide exactly ONE of these three identification methods (they are mutually exclusive):**
 
-**Option A - Complete Model Reference (Recommended):**
-- `model_reference` (object)
+**Option A - Complete Model Reference (Recommended for complete data):**
+- `model_reference` (object, required)
   - `manufacturer_name` (string, required): Will be matched case-insensitively against existing manufacturers
-  - `model_name` (string, required): Will be matched case-insensitively against existing models
+  - `model_name` (string, required): Will be matched case-insensitively against existing models  
   - `year` (integer, required): Must match exactly (no case conversion)
+  - **All three sub-fields are required when using this option**
 
 **Option B - Fallback Manufacturer + Model:**
 - `manufacturer_name_fallback` (string, max 100 chars, required): Use when exact manufacturer match not found
@@ -135,7 +136,7 @@ A complete submission requires these top-level properties:
 
 ### Individual Guitar Examples
 
-#### Option A - Complete Model Reference
+#### Option A - Complete Model Reference (All three sub-fields required)
 ```json
 {
   "individual_guitar": {
@@ -170,13 +171,26 @@ A complete submission requires these top-level properties:
 }
 ```
 
+#### Option C - Fallback Manufacturer + Description
+```json
+{
+  "individual_guitar": {
+    "manufacturer_name_fallback": "Unknown Manufacturer",
+    "description": "Vintage electric guitar with single coil pickups, likely from the 1950s",
+    "year_estimate": "1950s",
+    "significance_level": "notable",
+    "current_estimated_value": 15000.00
+  }
+}
+```
+
 ## 4. Source Attribution
 
 **Required fields:**
 - `source_name` (string, 1-100 chars): Name of the source (e.g., "Fender 1954 Catalog", "Guitar World Magazine")
 
 **Optional fields:**
-- `source_type` (string, enum: "manufacturer_catalog", "auction_record", "museum", "book", "website", "manual_entry", "price_guide", default: "website")
+- `source_type` (string, enum: "manufacturer_catalog", "auction_record", "museum", "book", "website", "manual_entry", "price_guide"): Type of source
 - `url` (string, URI format, max 500 chars): URL to the source if available online
 - `isbn` (string, max 20 chars): ISBN for books
 - `publication_date` (string, date format: YYYY-MM-DD): Date the source was published
@@ -506,19 +520,42 @@ uv run python image_processor.py stratocaster.jpg model 0197bda6-49cb-7642-b812-
 - ✅ **Cloudinary integration**: Automatic upload with transformations
 - ✅ **Error handling**: Comprehensive error checking and reporting
 
-## Data Types Summary
+## 10. Batch Processing Support
 
-- **string**: Text values (use quotes)
-- **integer**: Whole numbers (no decimal points)
-- **number**: Decimal numbers (can include decimal points)
-- **boolean**: true/false values (no quotes)
-- **object**: Nested JSON objects (use curly braces {})
-- **array**: Lists of values (use square brackets [])
-- **date format**: YYYY-MM-DD strings (e.g., "1954-06-15")
-- **URI format**: Valid URLs or file paths (e.g., "https://example.com" or "images/logo.png")
-- **enum**: Specific allowed string values (must match exactly, case-sensitive)
+The CLI supports both single submissions and batch processing with arrays of submissions:
 
-## Smart Matching & Flexibility
+### Single Submission
+```json
+{
+  "manufacturer": { ... },
+  "model": { ... },
+  "individual_guitar": { ... },
+  "source_attribution": { ... }
+}
+```
+
+### Batch Submission
+```json
+[
+  {
+    "manufacturer": { ... },
+    "model": { ... }
+  },
+  {
+    "model": { ... },
+    "source_attribution": { ... }
+  },
+  {
+    "manufacturer": { ... },
+    "model": { ... },
+    "individual_guitar": { ... }
+  }
+]
+```
+
+**Note:** Each item in a batch can have different combinations of entities. The system processes them independently and provides a summary of results.
+
+## 11. Smart Matching & Flexibility
 
 The Guitar Registry system includes intelligent matching capabilities to make data ingestion more flexible while maintaining data integrity:
 
@@ -543,7 +580,7 @@ The Guitar Registry system includes intelligent matching capabilities to make da
 - **Maintains data quality** through intelligent conflict resolution
 - **Supports both structured and unstructured data** sources
 
-## Validation Rules
+## 12. Validation Rules
 
 ### Data Validation
 - **String fields**: Have maximum length limits, must be quoted
@@ -555,28 +592,40 @@ The Guitar Registry system includes intelligent matching capabilities to make da
 - **Optional fields**: Can be null, omitted entirely, or contain valid data
 - **Field names**: Must be exactly as specified, case-sensitive
 
-### Image Validation
+### **Critical Validation Rules**
+
+#### Individual Guitar Identification
+- **Exactly one identification method required**: You must provide either `model_reference` OR fallback fields, not both
+- **Model reference validation**: If using `model_reference`, all three sub-fields (`manufacturer_name`, `model_name`, `year`) are required
+- **Fallback validation**: If using fallback approach, you must provide `manufacturer_name_fallback` AND either `model_name_fallback` OR `description`
+
+#### Field Dependencies
+- **Manufacturer dependency**: `model.manufacturer_name` must reference an existing manufacturer in the database (or be included in the same submission)
+- **Model dependency**: `individual_guitar.model_reference` must reference an existing model in the database (or be included in the same submission)
+- **Serial number uniqueness**: Serial numbers must be unique across all individual guitars
+
+#### Image Validation
 - Only one primary image per entity
 - Valid entity types: manufacturer, model, individual_guitar, product_line, specification, finish
 - Valid image types: primary, logo, gallery, headstock, serial_number, body_front, body_back, neck, hardware, detail, certificate, documentation, historical
 - Maximum file size: 10MB
 - Supported formats: JPEG, PNG, WebP, AVIF
 
-### Critical Validation Notes
+### **Critical Validation Notes**
 - **Manufacturer names are matched case-insensitively** between manufacturer and model/individual_guitar objects (e.g., "Fender", "fender", "FENDER" all match)
 - **Model names are matched case-insensitively** between model and individual_guitar objects (e.g., "Stratocaster", "stratocaster", "STRATOCASTER" all match)
 - **Years must match exactly** between model and individual_guitar objects (e.g., 1954 must match 1954, not "1954")
 - **Serial numbers must be unique** across all individual guitars
 - **Date formats must be YYYY-MM-DD** (e.g., "1954-06-15", not "06/15/1954" or "June 15, 1954")
 
-## Database Schema
+## 13. Database Schema
 
 The system works with an enhanced database schema that includes:
 
 ### Core Tables
 - `manufacturers`: Company information
 - `models`: Guitar model specifications
-- `individual_guitars`: Specific guitar instances
+- `individual_guitars`: Specific guitar instances with hybrid FK + fallback approach
 - `specifications`: Technical details
 - `finishes`: Color and finish information
 - `data_sources`: Source attribution
@@ -588,7 +637,13 @@ The system works with an enhanced database schema that includes:
 - Automatic primary image management
 - Responsive image variants
 
-## Troubleshooting
+### Hybrid Individual Guitar Schema
+The `individual_guitars` table supports both approaches:
+- **Foreign key reference**: `model_id` links to existing models (for complete data)
+- **Fallback text fields**: `manufacturer_name_fallback`, `model_name_fallback`, `year_estimate`, `description` (for incomplete data)
+- **Constraint**: Ensures either `model_id` OR fallback fields are provided
+
+## 14. Troubleshooting
 
 ### Common Issues
 
@@ -599,6 +654,8 @@ The system works with an enhanced database schema that includes:
 5. **"Validation failed"**: Check required fields and data format compliance
 6. **"Year mismatch"**: Ensure year values match exactly between model and individual guitar (e.g., both must be 1954, not "1954")
 7. **"Invalid date format"**: Use YYYY-MM-DD format for all dates
+8. **"Missing dependency"**: Ensure referenced manufacturers and models exist in the database
+9. **"Invalid individual guitar identification"**: Provide exactly one identification method (model_reference OR fallback fields)
 
 ### Debug Mode
 
@@ -609,7 +666,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 ```
 
-## Next Steps
+## 15. Next Steps
 
 After setting up your data and images, you can:
 
@@ -619,7 +676,7 @@ After setting up your data and images, you can:
 4. **Build UI**: Use the image URLs to display images in your application
 5. **Extend functionality**: Add custom validation rules or processing workflows
 
-## Example Queries
+## 16. Example Queries
 
 ### Find if a model has a primary image
 
@@ -636,7 +693,7 @@ AND i.entity_id = '019820af-3caf-73d0-90ce-700d3f4a1f70'
 SELECT * FROM get_entity_images('model', '019820af-3caf-73d0-90ce-700d3f4a1f70');
 ```
 
-## LLM Agent Guidelines
+## 17. LLM Agent Guidelines
 
 When preparing JSON data for ingestion, follow these guidelines:
 
@@ -650,3 +707,6 @@ When preparing JSON data for ingestion, follow these guidelines:
 8. **Verify numeric ranges** for numeric fields
 9. **Use the complete examples** as templates for your data
 10. **Test your JSON** with a JSON validator before submission
+11. **Provide exactly one identification method** for individual guitars (model_reference OR fallback fields)
+12. **Ensure field dependencies** are satisfied (manufacturers must exist before referencing them)
+13. **Use batch processing** for multiple submissions to improve efficiency

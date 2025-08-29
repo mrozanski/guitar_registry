@@ -39,3 +39,5 @@ history/
 database/pg_uuidv7/
 
 *.local.*
+
+SQL-helpers/
