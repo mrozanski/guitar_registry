@@ -49,7 +49,7 @@ These files are tracked in git and serve as the **official examples** for the pr
 #### **`example_guitar_models.json`** 
 - **Purpose**: Example structure for manufacturer and model data
 - **Content**: 3 manufacturers + 100+ models from Fender, Gibson, Epiphone
-- **Structure**: Array of objects with `manufacturer`, `model`, and `source_attribution` sections
+- **Structure**: Array of objects with `manufacturer` and `model` sections
 - **Status**: ✅ **Valid for processing** - contains complete, well-structured data
 
 #### **`example_guitar_with_images.json`**
@@ -61,7 +61,7 @@ These files are tracked in git and serve as the **official examples** for the pr
 #### **`slash_collection.json`**
 - **Purpose**: Real-world example of individual guitar data
 - **Content**: 30+ individual guitars from Slash's collection using fallback references
-- **Structure**: Array of objects with `individual_guitar` and `source_attribution`
+- **Structure**: Array of objects with `individual_guitar`
 - **Status**: ✅ **Valid for processing** - uses fallback manufacturer/model references
 
 ### **✅ 2. Non-Version-Controlled JSON Files (Additional Valid Examples)**

@@ -6,12 +6,6 @@
       "founded_year": 1946,
       "website": "https://www.fender.com",
       "status": "active"
-    },
-    "source_attribution": {
-      "source_name": "Fender Guitar Database Compilation",
-      "source_type": "website",
-      "url": "https://findmyguitar.com/fender",
-      "reliability_score": 9
     }
   },
   {
@@ -21,12 +15,6 @@
       "founded_year": 1902,
       "website": "https://www.gibson.com",
       "status": "active"
-    },
-    "source_attribution": {
-      "source_name": "Gibson Model Database",
-      "source_type": "manufacturer_catalog",
-      "url": "https://www.gibson.com",
-      "reliability_score": 10
     }
   },
   {
@@ -35,12 +23,6 @@
       "country": "USA",
       "founded_year": 1873,
       "status": "acquired"
-    },
-    "source_attribution": {
-      "source_name": "Epiphone Historical Database",
-      "source_type": "website",
-      "url": "https://www.epiphone.com",
-      "reliability_score": 9
     }
   },
   {

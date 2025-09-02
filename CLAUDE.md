@@ -83,7 +83,7 @@ Guitar data is submitted as JSON with nested structures:
 - `manufacturer`: Company information
 - `model`: Model specifications and production details
 - `individual_guitar`: Specific instrument with serial numbers and significance
-- `source_attribution`: Data source and reliability information
+
 
 See `sample_single.json` and `sample_batch.json` for examples.
 
