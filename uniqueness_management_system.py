@@ -28,6 +28,8 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import jsonschema
 from difflib import SequenceMatcher
+from guitar_registry_shared_models.validation import validate_individual_components
+from pydantic import ValidationError
 
 class MatchLevel(Enum):
     EXACT = "exact"
@@ -369,12 +371,17 @@ class GuitarDataValidator:
     
     def validate_manufacturer(self, data: Dict) -> ValidationResult:
         """Validate and check uniqueness for manufacturer data."""
-        # Schema validation
         try:
-            jsonschema.validate(data, MANUFACTURER_SCHEMA)
-        except jsonschema.ValidationError as e:
+            # validate_individual_components expects the full data structure with 'manufacturer' key
+            full_data = {'manufacturer': data}
+            validated_components = validate_individual_components(full_data)
+            manufacturer = validated_components['manufacturer']
+            print(f"✅ Validated: {manufacturer.name}")
+            print(f"   Status: {manufacturer.status}")  # Defaults to "active"
+    
+        except ValidationError as e:
+            print(f"❌ Validation failed: {e}")
             return ValidationResult(False, "invalid_schema", conflicts=[str(e)])
-        
         # Find matches
         matches = self.find_manufacturer_matches(data)
         
