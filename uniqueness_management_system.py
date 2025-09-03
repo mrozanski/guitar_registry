@@ -30,6 +30,7 @@ import jsonschema
 from difflib import SequenceMatcher
 from guitar_registry_shared_models.validation import validate_individual_components
 from pydantic import ValidationError
+import importlib.metadata
 
 class MatchLevel(Enum):
     EXACT = "exact"
@@ -42,6 +43,15 @@ class ConflictResolution(Enum):
     REPLACE = "replace"
     KEEP_EXISTING = "keep_existing"
     MANUAL_REVIEW = "manual_review"
+
+def get_created_by_info():
+    """Get the created_by string for records added by the guitar processor."""
+    try:
+        version = importlib.metadata.version('gtr-reg')
+        return f"guitar_processor_cli_v{version}"
+    except Exception:
+        # Fallback if version can't be determined
+        return "guitar_processor_cli_v0.1.0"
 
 @dataclass
 class ValidationResult:
@@ -172,20 +182,7 @@ FINISH_SCHEMA = {
     "additionalProperties": False
 }
 
-SOURCE_ATTRIBUTION_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "source_name": {"type": "string", "minLength": 1, "maxLength": 100},
-        "source_type": {"type": "string", "enum": ["manufacturer_catalog", "auction_record", "museum", "book", "website", "manual_entry", "price_guide"], "default": "website"},
-        "url": {"type": ["string", "null"], "format": "uri", "maxLength": 500},
-        "isbn": {"type": ["string", "null"], "maxLength": 20},
-        "publication_date": {"type": ["string", "null"], "format": "date"},
-        "reliability_score": {"type": ["integer", "null"], "minimum": 1, "maximum": 10},
-        "notes": {"type": ["string", "null"]}
-    },
-    "required": ["source_name"],
-    "additionalProperties": False
-}
+
 
 class GuitarDataValidator:
     def __init__(self, db_connection):
@@ -461,14 +458,7 @@ class GuitarDataValidator:
             )
         else:
             return ValidationResult(True, "insert", confidence=1.0)
-    def validate_source_attribution(self, data: Dict) -> ValidationResult:
-        """Validate source attribution data."""
-        try:
-            jsonschema.validate(data, SOURCE_ATTRIBUTION_SCHEMA)
-        except jsonschema.ValidationError as e:
-            return ValidationResult(False, "invalid_schema", conflicts=[str(e)])
-        
-        return ValidationResult(True, "insert", confidence=1.0)
+
     
     def validate_individual_guitar(self, data: Dict) -> ValidationResult:
         """Validate and check uniqueness for individual guitar data."""
@@ -541,8 +531,7 @@ class GuitarDataProcessor:
         {
             "manufacturer": {...},
             "model": {...},
-            "individual_guitar": {...} (optional),
-            "source_attribution": {...}
+            "individual_guitar": {...} (optional)
         }
         
         Batch submission format:
@@ -764,11 +753,7 @@ class GuitarDataProcessor:
                 
                 results['actions_taken'].append(f"Guitar {guitar_result.action}")
             
-            # Process source attribution if present
-            if 'source_attribution' in submission_data:
-                source_id = self._process_source_attribution(submission_data['source_attribution'])
-                results['ids_created']['source'] = source_id
-                results['actions_taken'].append("Source attribution processed")
+
             
             results['success'] = True
             return results
@@ -808,15 +793,16 @@ class GuitarDataProcessor:
         query = """
             INSERT INTO models (manufacturer_id, product_line_id, name, year, production_type, 
                               production_start_date, production_end_date, estimated_production_quantity,
-                              msrp_original, currency, description)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                              msrp_original, currency, description, created_by)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
             manufacturer_id, product_line_id, data.get('name'), data.get('year'),
             data.get('production_type', 'mass'), data.get('production_start_date'),
             data.get('production_end_date'), data.get('estimated_production_quantity'),
-            data.get('msrp_original'), data.get('currency', 'USD'), data.get('description')
+            data.get('msrp_original'), data.get('currency', 'USD'), data.get('description'),
+            get_created_by_info()
         )
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
@@ -830,9 +816,9 @@ class GuitarDataProcessor:
             INSERT INTO individual_guitars (
                 model_id, manufacturer_name_fallback, model_name_fallback, year_estimate, description,
                 serial_number, production_date, production_number, significance_level, significance_notes, 
-                current_estimated_value, condition_rating, modifications, provenance_notes
+                current_estimated_value, condition_rating, modifications, provenance_notes, created_by
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
@@ -849,7 +835,8 @@ class GuitarDataProcessor:
             data.get('current_estimated_value'),
             data.get('condition_rating'), 
             data.get('modifications'), 
-            data.get('provenance_notes')
+            data.get('provenance_notes'),
+            get_created_by_info()
         )
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
@@ -857,13 +844,14 @@ class GuitarDataProcessor:
     def _insert_manufacturer(self, data: Dict) -> str:
         """Insert new manufacturer and return ID."""
         query = """
-            INSERT INTO manufacturers (name, country, founded_year, website, status, notes)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO manufacturers (name, country, founded_year, website, status, notes, created_by)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
             data.get('name'), data.get('country'), data.get('founded_year'),
-            data.get('website'), data.get('status', 'active'), data.get('notes')
+            data.get('website'), data.get('status', 'active'), data.get('notes'), 
+            get_created_by_info()
         )
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
@@ -991,53 +979,7 @@ class GuitarDataProcessor:
                 WHERE id = %s
             """
             self.cursor.execute(query, values)
-    def _process_source_attribution(self, data: Dict) -> str:
-        """Process source attribution and return source ID."""
-        # Validate the source attribution data first
-        source_result = self.validator.validate_source_attribution(data)
-        if not source_result.is_valid:
-            raise ValueError(f"Invalid source attribution: {source_result.conflicts}")
-        
-        # Check if source already exists (avoid duplicates)
-        source_name = data.get('source_name')
-        url = data.get('url')
-        
-        if url:
-            # Check by name and URL
-            self.cursor.execute(
-                "SELECT id FROM data_sources WHERE source_name = %s AND url = %s",
-                (source_name, url)
-            )
-        else:
-            # Check by name only if no URL provided
-            self.cursor.execute(
-                "SELECT id FROM data_sources WHERE source_name = %s AND url IS NULL",
-                (source_name,)
-            )
-        
-        existing = self.cursor.fetchone()
-        
-        if existing:
-            return existing['id']
-        
-        # Insert new source
-        query = """
-            INSERT INTO data_sources (source_name, source_type, url, isbn, 
-                                    publication_date, reliability_score, notes)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            RETURNING id
-        """
-        values = (
-            data.get('source_name'),
-            data.get('source_type', 'website'),
-            data.get('url'),
-            data.get('isbn'),
-            data.get('publication_date'),
-            data.get('reliability_score'),
-            data.get('notes')
-        )
-        self.cursor.execute(query, values)
-        return self.cursor.fetchone()['id']
+
 
 # Example usage
 def example_usage():
@@ -1070,11 +1012,6 @@ def example_usage():
             "significance_level": "historic",
             "significance_notes": "Owned by Jimmy Page",
             "current_estimated_value": 500000.00
-        },
-        "source_attribution": {
-            "source_name": "Guitar World Magazine",
-            "url": "https://example.com/article",
-            "confidence_level": "high"
         }
     }
     
@@ -1123,11 +1060,6 @@ def example_usage():
                 "production_type": "mass",
                 "msrp_original": 189.50,
                 "currency": "USD"
-            },
-            "source_attribution": {
-                "source_name": "Fender Catalog 1950",
-                "source_type": "manufacturer_catalog",
-                "reliability_score": 9
             }
         }
     ]

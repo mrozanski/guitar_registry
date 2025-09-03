@@ -353,11 +353,6 @@ def create_sample_files():
             "significance_level": "historic",
             "significance_notes": "Famous 1959 Les Paul",
             "current_estimated_value": 500000.00
-        },
-        "source_attribution": {
-            "source_name": "Guitar Registry Test",
-            "source_type": "manual_entry",
-            "reliability_score": 9
         }
     }
     

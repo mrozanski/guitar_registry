@@ -34,6 +34,7 @@ CREATE TABLE manufacturers (
     website VARCHAR(255),
     status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'defunct', 'acquired')),
     notes TEXT,
+    created_by VARCHAR(100),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -64,6 +65,7 @@ CREATE TABLE models (
     msrp_original DECIMAL(10,2),
     currency VARCHAR(3) DEFAULT 'USD',
     description TEXT,
+    created_by VARCHAR(100),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(manufacturer_id, name, year)
@@ -93,6 +95,7 @@ CREATE TABLE individual_guitars (
     condition_rating VARCHAR(20) CHECK (condition_rating IN ('mint', 'excellent', 'very_good', 'good', 'fair', 'poor', 'relic')),
     modifications TEXT,
     provenance_notes TEXT,
+    created_by VARCHAR(100),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     

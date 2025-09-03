@@ -10,8 +10,7 @@ A complete submission requires these top-level properties:
 {
   "manufacturer": { ... },
   "model": { ... },
-  "individual_guitar": { ... },
-  "source_attribution": { ... }
+  "individual_guitar": { ... }
 }
 ```
 
@@ -197,20 +196,7 @@ A complete submission requires these top-level properties:
 - `reliability_score` (integer, 1-10): 1=least reliable, 10=most reliable
 - `notes` (string): Additional information about the source
 
-### Source Attribution Example
 
-```json
-{
-  "source_attribution": {
-    "source_name": "Fender 1954 Product Catalog",
-    "source_type": "manufacturer_catalog",
-    "url": "https://archive.org/fender-1954-catalog",
-    "publication_date": "1954-01-01",
-    "reliability_score": 10,
-    "notes": "Official manufacturer catalog, highest reliability"
-  }
-}
-```
 
 ## 5. Specifications Object
 
@@ -357,12 +343,6 @@ Here's a complete example showing all components together:
     "significance_notes": "One of the first 100 Stratocasters ever produced",
     "current_estimated_value": 50000.00,
     "condition_rating": "excellent"
-  },
-  "source_attribution": {
-    "source_name": "Fender 1954 Product Catalog",
-    "source_type": "manufacturer_catalog",
-    "reliability_score": 10,
-    "notes": "Official manufacturer catalog"
   }
 }
 ```
@@ -529,8 +509,7 @@ The CLI supports both single submissions and batch processing with arrays of sub
 {
   "manufacturer": { ... },
   "model": { ... },
-  "individual_guitar": { ... },
-  "source_attribution": { ... }
+  "individual_guitar": { ... }
 }
 ```
 
@@ -542,8 +521,7 @@ The CLI supports both single submissions and batch processing with arrays of sub
     "model": { ... }
   },
   {
-    "model": { ... },
-    "source_attribution": { ... }
+    "model": { ... }
   },
   {
     "manufacturer": { ... },
