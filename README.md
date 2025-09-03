@@ -209,7 +209,7 @@ python guitar_processor_cli.py --file vintage_collection.json
 - **models**: Specific model-year combinations
 - **individual_guitars**: Historically significant instruments
 - **specifications**: Detailed technical specifications
-- **finishes**: Colors and finish types
+
 
 ### Supporting Tables
 

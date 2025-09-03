@@ -82,6 +82,28 @@ MANUFACTURER_SCHEMA = {
     "additionalProperties": False
 }
 
+SPECIFICATIONS_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "body_wood": {"type": ["string", "null"], "maxLength": 50},
+        "neck_wood": {"type": ["string", "null"], "maxLength": 50},
+        "fingerboard_wood": {"type": ["string", "null"], "maxLength": 50},
+        "scale_length_inches": {"type": ["number", "null"], "minimum": 20, "maximum": 30},
+        "num_frets": {"type": ["integer", "null"], "minimum": 12, "maximum": 36},
+        "nut_width_inches": {"type": ["number", "null"], "minimum": 1.0, "maximum": 2.5},
+        "neck_profile": {"type": ["string", "null"], "maxLength": 50},
+        "bridge_type": {"type": ["string", "null"], "maxLength": 50},
+        "pickup_configuration": {"type": ["string", "null"], "maxLength": 150},
+        "electronics_description": {"type": ["string", "null"]},
+        "hardware_finish": {"type": ["string", "null"], "maxLength": 50},
+        "body_finish": {"type": ["string", "null"]}, # TEXT field allows longer finish descriptions with multiple colors/variations
+        "weight_lbs": {"type": ["number", "null"], "minimum": 1, "maximum": 20},
+        "case_included": {"type": ["boolean", "null"]},
+        "case_type": {"type": ["string", "null"], "maxLength": 50}
+    },
+    "additionalProperties": False
+}
+
 MODEL_SCHEMA = {
     "type": "object", 
     "properties": {
@@ -96,8 +118,17 @@ MODEL_SCHEMA = {
         "msrp_original": {"type": ["number", "null"], "minimum": 0},
         "currency": {"type": "string", "default": "USD", "maxLength": 3},
         "description": {"type": ["string", "null"]},
-        "specifications": {"type": ["object", "null"]},  # Will be processed separately
-        "finishes": {"type": ["array", "null"]}  # Will be processed separately
+        "specifications": {
+            "oneOf": [
+                {"type": "null"},
+                SPECIFICATIONS_SCHEMA,
+                {
+                    "type": "array",
+                    "items": SPECIFICATIONS_SCHEMA,
+                    "minItems": 1
+                }
+            ]
+        }  # Single specification object OR array of specification objects
     },
     "required": ["manufacturer_name", "name", "year"],
     "additionalProperties": False
@@ -157,12 +188,10 @@ SPECIFICATIONS_SCHEMA = {
         "nut_width_inches": {"type": ["number", "null"], "minimum": 1.0, "maximum": 2.5},
         "neck_profile": {"type": ["string", "null"], "maxLength": 50},
         "bridge_type": {"type": ["string", "null"], "maxLength": 50},
-        "pickup_configuration": {"type": ["string", "null"], "maxLength": 20},
-        "pickup_brand": {"type": ["string", "null"], "maxLength": 50},
-        "pickup_model": {"type": ["string", "null"], "maxLength": 100},
+        "pickup_configuration": {"type": ["string", "null"], "maxLength": 150},
         "electronics_description": {"type": ["string", "null"]},
         "hardware_finish": {"type": ["string", "null"], "maxLength": 50},
-        "body_finish": {"type": ["string", "null"], "maxLength": 100},
+        "body_finish": {"type": ["string", "null"]}, # TEXT field allows longer finish descriptions with multiple colors/variations
         "weight_lbs": {"type": ["number", "null"], "minimum": 1, "maximum": 20},
         "case_included": {"type": ["boolean", "null"]},
         "case_type": {"type": ["string", "null"], "maxLength": 50}
@@ -170,17 +199,7 @@ SPECIFICATIONS_SCHEMA = {
     "additionalProperties": False
 }
 
-FINISH_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "finish_name": {"type": "string", "minLength": 1, "maxLength": 100},
-        "finish_type": {"type": ["string", "null"], "maxLength": 50},
-        "color_code": {"type": ["string", "null"], "maxLength": 20},
-        "rarity": {"type": ["string", "null"], "enum": ["common", "uncommon", "rare", "extremely_rare"]}
-    },
-    "required": ["finish_name"],
-    "additionalProperties": False
-}
+
 
 
 
@@ -706,16 +725,10 @@ class GuitarDataProcessor:
                     
                     # Process model specifications if present
                     if submission_data['model'].get('specifications'):
-                        spec_id = self._insert_specifications(submission_data['model']['specifications'], 'model', model_id)
-                        results['ids_created']['model_specifications'] = spec_id
+                        spec_ids = self._insert_specifications(submission_data['model']['specifications'], 'model', model_id)
+                        results['ids_created']['model_specifications'] = spec_ids
                     
-                    # Process model finishes if present
-                    if submission_data['model'].get('finishes'):
-                        finish_ids = []
-                        for finish_data in submission_data['model']['finishes']:
-                            finish_id = self._insert_finish(finish_data, 'model', model_id)
-                            finish_ids.append(finish_id)
-                        results['ids_created']['model_finishes'] = finish_ids
+
                         
                 elif model_result.action == "update":
                     model_id = model_result.target_id
@@ -876,8 +889,14 @@ class GuitarDataProcessor:
             """
             self.cursor.execute(query, values)
     
-    def _insert_specifications(self, data: Dict, target_type: str, target_id: str) -> str:
-        """Insert specifications for either a model or individual guitar."""
+    def _insert_specifications(self, data, target_type: str, target_id: str):
+        """Insert specifications for either a model or individual guitar.
+        
+        Args:
+            data: Either a single Dict or List[Dict] (both supported for models and individual guitars)
+            target_type: 'model' or 'individual_guitar'
+            target_id: The ID of the target entity
+        """
         if target_type == 'model':
             model_id = target_id
             individual_guitar_id = None
@@ -885,45 +904,40 @@ class GuitarDataProcessor:
             model_id = None
             individual_guitar_id = target_id
         
+        # Handle both single specification object and array
+        if isinstance(data, list):
+            # Multiple specifications (array format)
+            spec_ids = []
+            for spec_data in data:
+                spec_id = self._insert_single_specification(spec_data, model_id, individual_guitar_id)
+                spec_ids.append(spec_id)
+            return spec_ids
+        else:
+            # Single specification object
+            return self._insert_single_specification(data, model_id, individual_guitar_id)
+    
+    def _insert_single_specification(self, spec_data: Dict, model_id: str, individual_guitar_id: str) -> str:
+        """Insert a single specification record."""
         query = """
             INSERT INTO specifications (model_id, individual_guitar_id, body_wood, neck_wood, fingerboard_wood,
                                      scale_length_inches, num_frets, nut_width_inches, neck_profile, bridge_type,
-                                     pickup_configuration, pickup_brand, pickup_model, electronics_description,
+                                     pickup_configuration, electronics_description,
                                      hardware_finish, body_finish, weight_lbs, case_included, case_type)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
-            model_id, individual_guitar_id, data.get('body_wood'), data.get('neck_wood'),
-            data.get('fingerboard_wood'), data.get('scale_length_inches'), data.get('num_frets'),
-            data.get('nut_width_inches'), data.get('neck_profile'), data.get('bridge_type'),
-            data.get('pickup_configuration'), data.get('pickup_brand'), data.get('pickup_model'),
-            data.get('electronics_description'), data.get('hardware_finish'), data.get('body_finish'),
-            data.get('weight_lbs'), data.get('case_included'), data.get('case_type')
+            model_id, individual_guitar_id, spec_data.get('body_wood'), spec_data.get('neck_wood'),
+            spec_data.get('fingerboard_wood'), spec_data.get('scale_length_inches'), spec_data.get('num_frets'),
+            spec_data.get('nut_width_inches'), spec_data.get('neck_profile'), spec_data.get('bridge_type'),
+            spec_data.get('pickup_configuration'),
+            spec_data.get('electronics_description'), spec_data.get('hardware_finish'), spec_data.get('body_finish'),
+            spec_data.get('weight_lbs'), spec_data.get('case_included'), spec_data.get('case_type')
         )
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
     
-    def _insert_finish(self, data: Dict, target_type: str, target_id: str) -> str:
-        """Insert finish for either a model or individual guitar."""
-        if target_type == 'model':
-            model_id = target_id
-            individual_guitar_id = None
-        else:
-            model_id = None
-            individual_guitar_id = target_id
-        
-        query = """
-            INSERT INTO finishes (model_id, individual_guitar_id, finish_name, finish_type, color_code, rarity)
-            VALUES (%s, %s, %s, %s, %s, %s)
-            RETURNING id
-        """
-        values = (
-            model_id, individual_guitar_id, data.get('finish_name'),
-            data.get('finish_type'), data.get('color_code'), data.get('rarity')
-        )
-        self.cursor.execute(query, values)
-        return self.cursor.fetchone()['id']
+
     
     def _update_model(self, model_id: str, data: Dict):
         """Update existing model with new data."""

@@ -62,7 +62,6 @@ A complete submission requires these top-level properties:
 - `currency` (string, max 3 chars, default: "USD"): ISO currency code
 - `description` (string): Detailed description of the model
 - `specifications` (object): Technical specifications (see Section 5)
-- `finishes` (array): Available finishes (see Section 6)
 
 ### Model Example
 
@@ -87,14 +86,7 @@ A complete submission requires these top-level properties:
       "scale_length_inches": 25.5,
       "num_frets": 21,
       "pickup_configuration": "SSS"
-    },
-    "finishes": [
-      {
-        "finish_name": "Two-Tone Sunburst",
-        "finish_type": "Nitrocellulose",
-        "rarity": "common"
-      }
-    ]
+    }
   }
 }
 ```
@@ -196,8 +188,6 @@ A complete submission requires these top-level properties:
 - `reliability_score` (integer, 1-10): 1=least reliable, 10=most reliable
 - `notes` (string): Additional information about the source
 
-
-
 ## 5. Specifications Object
 
 **All fields optional:** Include only the specifications that are known and verified.
@@ -210,74 +200,187 @@ A complete submission requires these top-level properties:
 - `nut_width_inches` (number, 1.0-2.5): Width of nut in inches
 - `neck_profile` (string, max 50 chars): Neck shape profile
 - `bridge_type` (string, max 50 chars): Type of bridge
-- `pickup_configuration` (string, max 20 chars): Pickup arrangement (e.g., "HH", "SSS", "HSS")
-- `pickup_brand` (string, max 50 chars): Brand of pickups
-- `pickup_model` (string, max 100 chars): Model of pickups
+- `pickup_configuration` (string, max 150 chars): Pickup styles, brand, and arrangement (e.g., "2 x single coils (SS)", "2 x PAF humbuckers", "Seymour Duncan JB TB-4 humbucker in the bridge and two Seymour Duncan SSL-6 single coils in the middle and neck positions")
 - `electronics_description` (string): Description of electronics and controls
 - `hardware_finish` (string, max 50 chars): Finish of hardware (e.g., "Chrome", "Gold", "Black")
-- `body_finish` (string, max 100 chars): Finish of guitar body
+- `body_finish` (long text): Finish of guitar body (e.g., "Nitrocellulose Cherry Sunburst", "Olympic White, Lake placid Blue, ", "Sandblasted satin urethane, multiple colors")
 - `weight_lbs` (number, 1-20): Weight in pounds
 - `case_included` (boolean): Whether case was included
 - `case_type` (string, max 50 chars): Type of case if included
 
-### Specifications Example
+### One model can have multiple specification objects
 
+You can choose to combine options in one specification object or to use multiple specification objects if the differences are significant.
+
+For guitar models the specifications property can be either:
+
+- An array of specification objects
+- A single specification object
+- Not present
+
+For individual guitars the specifications property can be either:
+
+- A single specification object
+- Not present
+
+## Decision Framework
+
+**Create separate specification records when physical construction or functionality differs:**
+
+1. **Different materials** (wood types, finish chemistry)
+2. **Different electronics** (pickup types, wiring configurations)
+3. **Different hardware** (bridge types, tuner types)
+4. **Different physical dimensions** (scale length, fret count, nut width)
+
+**Combine variations in single record when only cosmetic differences exist:**
+
+1. **Color variations** of same finish type
+2. **Hardware color** variations (chrome vs gold vs black)
+3. **Minor aesthetic differences** that don't affect construction
+
+## Examples
+
+### ✅ Good: Combine Color Variations
 ```json
 {
-  "specifications": {
-    "body_wood": "Alder",
+  "body_finish": "Polyurethane gloss - Olympic White, Lake Placid Blue, Ivory, Silver",
+  "hardware_finish": "Chrome, Gold, Black nickel",
+  "body_wood": "Alder",
+  "pickup_configuration": "3 x single coils (SSS) - Fender V-Mod II"
+}
+```
+
+### ✅ Good: Separate Records for Different Woods
+```json
+[
+  {
+    "body_finish": "Polyurethane gloss - 3-Color Sunburst, Natural",
+    "body_wood": "Ash",
     "neck_wood": "Maple",
-    "fingerboard_wood": "Maple",
-    "scale_length_inches": 25.5,
-    "num_frets": 21,
-    "nut_width_inches": 1.65,
-    "neck_profile": "C-Shape",
-    "bridge_type": "Tremolo",
-    "pickup_configuration": "SSS",
-    "pickup_brand": "Fender",
-    "pickup_model": "Single-Coil",
-    "electronics_description": "3-way switch, 2 tone controls, 1 volume control",
-    "hardware_finish": "Chrome",
-    "body_finish": "Two-Tone Sunburst",
-    "weight_lbs": 7.5,
-    "case_included": true,
-    "case_type": "Tweed Case"
+    "pickup_configuration": "3 x single coils (SSS) - Fender V-Mod II"
+  },
+  {
+    "body_finish": "Polyurethane gloss - Olympic White, Black",
+    "body_wood": "Alder", 
+    "neck_wood": "Maple",
+    "pickup_configuration": "3 x single coils (SSS) - Fender V-Mod II"
   }
-}
+]
 ```
 
-## 6. Finish Object
-
-**Required fields:**
-- `finish_name` (string, 1-100 chars): Name of the finish as it appears in catalogs
-
-**Optional fields:**
-- `finish_type` (string, max 50 chars): Type of finish (e.g., "Nitrocellulose", "Polyester", "Lacquer")
-- `color_code` (string, max 20 chars): Manufacturer's color code
-- `rarity` (string, enum: "common", "uncommon", "rare", "extremely_rare")
-
-### Finish Example
-
+### ✅ Good: Separate Records for Different Electronics
 ```json
-{
-  "finishes": [
-    {
-      "finish_name": "Two-Tone Sunburst",
-      "finish_type": "Nitrocellulose",
-      "color_code": "TS",
-      "rarity": "common"
-    },
-    {
-      "finish_name": "Olympic White",
-      "finish_type": "Nitrocellulose",
-      "color_code": "OW",
-      "rarity": "uncommon"
-    }
-  ]
-}
+[
+  {
+    "body_finish": "Nitrocellulose lacquer - Heritage Cherry Sunburst, Tobacco Burst",
+    "pickup_configuration": "2 x PAF humbuckers - Gibson BurstBucker Pro",
+    "electronics_description": "2 volume, 2 tone, 3-way toggle"
+  },
+  {
+    "body_finish": "Nitrocellulose lacquer - Heritage Cherry Sunburst, Tobacco Burst", 
+    "pickup_configuration": "2 x PAF humbuckers - Gibson BurstBucker Pro with coil tap",
+    "electronics_description": "2 volume (push-pull coil tap), 2 tone, 3-way toggle"
+  }
+]
 ```
 
-## 7. Photo Object
+### ✅ Good: Separate Records for Different Bridge Types
+```json
+[
+  {
+    "body_finish": "Polyurethane - Vintage White, Shell Pink",
+    "bridge_type": "Vintage-style tremolo",
+    "pickup_configuration": "HSS - Humbucker bridge, 2 single coils"
+  },
+  {
+    "body_finish": "Polyurethane - Vintage White, Shell Pink",
+    "bridge_type": "Floyd Rose locking tremolo", 
+    "pickup_configuration": "HSS - Humbucker bridge, 2 single coils"
+  }
+]
+```
+
+### ✅ Good: Separate Records for Scale Length Variations
+```json
+[
+  {
+    "scale_length_inches": 25.5,
+    "num_frets": 22,
+    "nut_width_inches": 1.625,
+    "neck_profile": "Modern C",
+    "fingerboard_wood": "Rosewood, Maple"
+  },
+  {
+    "scale_length_inches": 24.75,
+    "num_frets": 22, 
+    "nut_width_inches": 1.687,
+    "neck_profile": "Vintage 50s",
+    "fingerboard_wood": "Rosewood"
+  }
+]
+```
+
+### ✅ Good: Complex Real-World Example - PRS SE Custom 24
+```json
+[
+  {
+    "body_finish": "Polyurethane gloss - Turquoise, Black Cherry, Blood Orange, Vintage Sunburst",
+    "body_wood": "Mahogany with maple cap",
+    "neck_wood": "Maple", 
+    "fingerboard_wood": "Rosewood",
+    "scale_length_inches": 25.0,
+    "num_frets": 24,
+    "pickup_configuration": "2 x humbuckers - PRS 85/15 S with coil tap",
+    "bridge_type": "PRS patented tremolo",
+    "hardware_finish": "Nickel"
+  },
+  {
+    "body_finish": "Polyurethane gloss - Black Gold Burst, Violet", 
+    "body_wood": "Mahogany with quilted maple cap",
+    "neck_wood": "Maple",
+    "fingerboard_wood": "Ebony",
+    "scale_length_inches": 25.0,
+    "num_frets": 24,
+    "pickup_configuration": "2 x humbuckers - PRS 85/15 S with coil tap",
+    "bridge_type": "PRS patented tremolo", 
+    "hardware_finish": "Nickel"
+  }
+]
+```
+
+### ❌ Avoid: Over-separation for Minor Variations
+```json
+// Don't create separate records for each color:
+[
+  {"body_finish": "Polyurethane gloss - Olympic White", "body_wood": "Alder"},
+  {"body_finish": "Polyurethane gloss - Lake Placid Blue", "body_wood": "Alder"},
+  {"body_finish": "Polyurethane gloss - Ivory", "body_wood": "Alder"}
+]
+
+// Instead combine:
+{"body_finish": "Polyurethane gloss - Olympic White, Lake Placid Blue, Ivory", "body_wood": "Alder"}
+```
+
+### ❌ Avoid: Under-separation for Functional Differences  
+```json
+// Don't combine different pickup configurations:
+{"pickup_configuration": "SSS Fender V-Mod II or HSS with Double Tap humbucker"}
+
+// Instead separate:
+[
+  {"pickup_configuration": "3 x single coils (SSS) - Fender V-Mod II"},
+  {"pickup_configuration": "HSS - Double Tap humbucker bridge, 2 V-Mod II single coils"}
+]
+```
+
+## Quick Reference
+
+**Combine when:** Colors, hardware finishes, minor aesthetic variations
+**Separate when:** Woods, pickups, electronics, bridges, dimensions, finish chemistry
+
+This approach ensures your data is both UI-friendly and accurately represents the real variations that matter to players and collectors.
+
+## 6. Photo Object
 
 **Required fields:**
 - `source` (string, file path or URL): Path to image file or URL
@@ -307,7 +410,7 @@ A complete submission requires these top-level properties:
 }
 ```
 
-## 8. Complete Submission Example
+## 7. Complete Submission Example
 
 Here's a complete example showing all components together:
 
@@ -347,7 +450,7 @@ Here's a complete example showing all components together:
 }
 ```
 
-## 9. Image Processing Workflow
+## 8. Image Processing Workflow
 
 The Guitar Registry includes a comprehensive image processing system that automatically handles image uploads, metadata extraction, and database integration.
 
@@ -605,7 +708,6 @@ The system works with an enhanced database schema that includes:
 - `models`: Guitar model specifications
 - `individual_guitars`: Specific guitar instances with hybrid FK + fallback approach
 - `specifications`: Technical details
-- `finishes`: Color and finish information
 - `data_sources`: Source attribution
 
 ### Image Management Tables
