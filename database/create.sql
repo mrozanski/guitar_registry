@@ -137,19 +137,7 @@ CREATE TABLE specifications (
            (model_id IS NULL AND individual_guitar_id IS NOT NULL))
 );
 
--- Colors and finishes
-CREATE TABLE finishes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    model_id UUID REFERENCES models(id),
-    individual_guitar_id UUID REFERENCES individual_guitars(id),
-    finish_name VARCHAR(100) NOT NULL,
-    finish_type VARCHAR(50),
-    color_code VARCHAR(20),
-    rarity VARCHAR(20) CHECK (rarity IN ('common', 'uncommon', 'rare', 'extremely_rare')),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CHECK ((model_id IS NOT NULL AND individual_guitar_id IS NULL) OR 
-           (model_id IS NULL AND individual_guitar_id IS NOT NULL))
-);
+
 
 -- Expert reviews table for attestations
 CREATE TABLE expert_reviews (
@@ -433,12 +421,7 @@ CREATE INDEX idx_specifications_neck_wood ON specifications(neck_wood) WHERE nec
 CREATE INDEX idx_specifications_pickup_config ON specifications(pickup_configuration) WHERE pickup_configuration IS NOT NULL;
 CREATE INDEX idx_specifications_year_range ON specifications(scale_length_inches, num_frets) WHERE scale_length_inches IS NOT NULL;
 
--- Finish indexes
-CREATE INDEX idx_finishes_name_lower ON finishes(LOWER(finish_name));
-CREATE INDEX idx_finishes_type ON finishes(finish_type) WHERE finish_type IS NOT NULL;
-CREATE INDEX idx_finishes_rarity ON finishes(rarity) WHERE rarity IS NOT NULL;
-CREATE INDEX idx_finishes_model ON finishes(model_id) WHERE model_id IS NOT NULL;
-CREATE INDEX idx_finishes_individual ON finishes(individual_guitar_id) WHERE individual_guitar_id IS NOT NULL;
+
 
 -- Expert reviews indexes
 CREATE INDEX idx_expert_reviews_reviewer ON expert_reviews(reviewer_name);

@@ -80,7 +80,7 @@ CREATE TABLE images (
     ),
     CONSTRAINT valid_entity_type CHECK (
         entity_type IN ('manufacturer', 'product_line', 'model', 'individual_guitar', 
-                       'specification', 'finish', 'notable_association')
+                       'specification', 'notable_association')
     ),
     CONSTRAINT valid_image_type CHECK (
         image_type IN ('primary', 'logo', 'gallery', 'headstock', 'serial_number', 

@@ -62,7 +62,6 @@ A complete submission requires these top-level properties:
 - `currency` (string, max 3 chars, default: "USD"): ISO currency code
 - `description` (string): Detailed description of the model
 - `specifications` (object): Technical specifications (see Section 5)
-- `finishes` (array): Available finishes (see Section 6)
 
 ### Model Example
 
@@ -87,14 +86,7 @@ A complete submission requires these top-level properties:
       "scale_length_inches": 25.5,
       "num_frets": 21,
       "pickup_configuration": "SSS"
-    },
-    "finishes": [
-      {
-        "finish_name": "Two-Tone Sunburst",
-        "finish_type": "Nitrocellulose",
-        "rarity": "common"
-      }
-    ]
+    }
   }
 }
 ```
@@ -215,7 +207,7 @@ A complete submission requires these top-level properties:
 - `pickup_model` (string, max 100 chars): Model of pickups
 - `electronics_description` (string): Description of electronics and controls
 - `hardware_finish` (string, max 50 chars): Finish of hardware (e.g., "Chrome", "Gold", "Black")
-- `body_finish` (string, max 100 chars): Finish of guitar body
+- `body_finish` (string, max 100 chars): Finish of guitar body (e.g., "Nitrocellulose Cherry Sunburst", "Olympic White", "Sandblasted satin urethane")
 - `weight_lbs` (number, 1-20): Weight in pounds
 - `case_included` (boolean): Whether case was included
 - `case_type` (string, max 50 chars): Type of case if included
@@ -246,38 +238,7 @@ A complete submission requires these top-level properties:
 }
 ```
 
-## 6. Finish Object
-
-**Required fields:**
-- `finish_name` (string, 1-100 chars): Name of the finish as it appears in catalogs
-
-**Optional fields:**
-- `finish_type` (string, max 50 chars): Type of finish (e.g., "Nitrocellulose", "Polyester", "Lacquer")
-- `color_code` (string, max 20 chars): Manufacturer's color code
-- `rarity` (string, enum: "common", "uncommon", "rare", "extremely_rare")
-
-### Finish Example
-
-```json
-{
-  "finishes": [
-    {
-      "finish_name": "Two-Tone Sunburst",
-      "finish_type": "Nitrocellulose",
-      "color_code": "TS",
-      "rarity": "common"
-    },
-    {
-      "finish_name": "Olympic White",
-      "finish_type": "Nitrocellulose",
-      "color_code": "OW",
-      "rarity": "uncommon"
-    }
-  ]
-}
-```
-
-## 7. Photo Object
+## 6. Photo Object
 
 **Required fields:**
 - `source` (string, file path or URL): Path to image file or URL
@@ -307,7 +268,7 @@ A complete submission requires these top-level properties:
 }
 ```
 
-## 8. Complete Submission Example
+## 7. Complete Submission Example
 
 Here's a complete example showing all components together:
 
@@ -347,7 +308,7 @@ Here's a complete example showing all components together:
 }
 ```
 
-## 9. Image Processing Workflow
+## 8. Image Processing Workflow
 
 The Guitar Registry includes a comprehensive image processing system that automatically handles image uploads, metadata extraction, and database integration.
 
@@ -605,7 +566,6 @@ The system works with an enhanced database schema that includes:
 - `models`: Guitar model specifications
 - `individual_guitars`: Specific guitar instances with hybrid FK + fallback approach
 - `specifications`: Technical details
-- `finishes`: Color and finish information
 - `data_sources`: Source attribution
 
 ### Image Management Tables

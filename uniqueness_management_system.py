@@ -96,8 +96,7 @@ MODEL_SCHEMA = {
         "msrp_original": {"type": ["number", "null"], "minimum": 0},
         "currency": {"type": "string", "default": "USD", "maxLength": 3},
         "description": {"type": ["string", "null"]},
-        "specifications": {"type": ["object", "null"]},  # Will be processed separately
-        "finishes": {"type": ["array", "null"]}  # Will be processed separately
+        "specifications": {"type": ["object", "null"]}  # Will be processed separately
     },
     "required": ["manufacturer_name", "name", "year"],
     "additionalProperties": False
@@ -170,17 +169,7 @@ SPECIFICATIONS_SCHEMA = {
     "additionalProperties": False
 }
 
-FINISH_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "finish_name": {"type": "string", "minLength": 1, "maxLength": 100},
-        "finish_type": {"type": ["string", "null"], "maxLength": 50},
-        "color_code": {"type": ["string", "null"], "maxLength": 20},
-        "rarity": {"type": ["string", "null"], "enum": ["common", "uncommon", "rare", "extremely_rare"]}
-    },
-    "required": ["finish_name"],
-    "additionalProperties": False
-}
+
 
 
 
@@ -709,13 +698,7 @@ class GuitarDataProcessor:
                         spec_id = self._insert_specifications(submission_data['model']['specifications'], 'model', model_id)
                         results['ids_created']['model_specifications'] = spec_id
                     
-                    # Process model finishes if present
-                    if submission_data['model'].get('finishes'):
-                        finish_ids = []
-                        for finish_data in submission_data['model']['finishes']:
-                            finish_id = self._insert_finish(finish_data, 'model', model_id)
-                            finish_ids.append(finish_id)
-                        results['ids_created']['model_finishes'] = finish_ids
+
                         
                 elif model_result.action == "update":
                     model_id = model_result.target_id
@@ -904,26 +887,7 @@ class GuitarDataProcessor:
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
     
-    def _insert_finish(self, data: Dict, target_type: str, target_id: str) -> str:
-        """Insert finish for either a model or individual guitar."""
-        if target_type == 'model':
-            model_id = target_id
-            individual_guitar_id = None
-        else:
-            model_id = None
-            individual_guitar_id = target_id
-        
-        query = """
-            INSERT INTO finishes (model_id, individual_guitar_id, finish_name, finish_type, color_code, rarity)
-            VALUES (%s, %s, %s, %s, %s, %s)
-            RETURNING id
-        """
-        values = (
-            model_id, individual_guitar_id, data.get('finish_name'),
-            data.get('finish_type'), data.get('color_code'), data.get('rarity')
-        )
-        self.cursor.execute(query, values)
-        return self.cursor.fetchone()['id']
+
     
     def _update_model(self, model_id: str, data: Dict):
         """Update existing model with new data."""

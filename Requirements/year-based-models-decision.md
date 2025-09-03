@@ -22,7 +22,7 @@ Just to confirm, this means the current schema we're using is considering guitar
 
   1. Spec Changes: Same model name often has different specs year-to-year
   2. Value Tracking: 2023 vs 2024 can have different market values
-  3. Production Differences: Electronics, finishes, hardware often change
+  3. Production Differences: Electronics, hardware often change
   4. Collector Relevance: Vintage guitar collectors care deeply about specific years
   5. Data Integrity: Prevents mixing specs from different production runs
 
