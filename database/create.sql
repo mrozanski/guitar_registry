@@ -29,6 +29,7 @@
 CREATE TABLE manufacturers (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     name VARCHAR(100) NOT NULL,
+    display_name VARCHAR(50),
     country VARCHAR(50),
     founded_year INTEGER,
     website VARCHAR(255),
@@ -85,6 +86,7 @@ CREATE TABLE individual_guitars (
     description TEXT, -- General description when model info is incomplete
     
     -- Guitar-specific fields
+    nickname VARCHAR(50),
     serial_number VARCHAR(50),
     production_date DATE,
     production_number INTEGER,

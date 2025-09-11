@@ -71,6 +71,7 @@ MANUFACTURER_SCHEMA = {
     "type": "object",
     "properties": {
         "name": {"type": "string", "minLength": 1, "maxLength": 100},
+        "display_name": {"type": ["string", "null"], "maxLength": 50},
         "country": {"type": ["string", "null"], "maxLength": 50},
         "founded_year": {"type": ["integer", "null"], "minimum": 1800, "maximum": 2030},
         "website": {"type": ["string", "null"], "format": "uri"},
@@ -155,6 +156,7 @@ INDIVIDUAL_GUITAR_SCHEMA = {
         "description": {"type": ["string", "null"]},  # General description when model info is incomplete
         
         # Guitar-specific fields
+        "nickname": {"type": ["string", "null"], "maxLength": 50},
         "serial_number": {"type": ["string", "null"], "maxLength": 50},
         "production_date": {"type": ["string", "null"], "format": "date"},
         "production_number": {"type": ["integer", "null"]},
@@ -828,10 +830,10 @@ class GuitarDataProcessor:
         query = """
             INSERT INTO individual_guitars (
                 model_id, manufacturer_name_fallback, model_name_fallback, year_estimate, description,
-                serial_number, production_date, production_number, significance_level, significance_notes, 
+                nickname, serial_number, production_date, production_number, significance_level, significance_notes, 
                 current_estimated_value, condition_rating, modifications, provenance_notes, created_by
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
@@ -840,6 +842,7 @@ class GuitarDataProcessor:
             data.get('model_name_fallback'),
             data.get('year_estimate'), 
             data.get('description'),
+            data.get('nickname'),
             data.get('serial_number'), 
             data.get('production_date'),
             data.get('production_number'), 
@@ -857,12 +860,12 @@ class GuitarDataProcessor:
     def _insert_manufacturer(self, data: Dict) -> str:
         """Insert new manufacturer and return ID."""
         query = """
-            INSERT INTO manufacturers (name, country, founded_year, website, status, notes, created_by)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO manufacturers (name, display_name, country, founded_year, website, status, notes, created_by)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
-            data.get('name'), data.get('country'), data.get('founded_year'),
+            data.get('name'), data.get('display_name'), data.get('country'), data.get('founded_year'),
             data.get('website'), data.get('status', 'active'), data.get('notes'), 
             get_created_by_info()
         )
@@ -875,7 +878,7 @@ class GuitarDataProcessor:
         update_fields = []
         values = []
         
-        for field in ['country', 'founded_year', 'website', 'status', 'notes']:
+        for field in ['display_name', 'country', 'founded_year', 'website', 'status', 'notes']:
             if data.get(field) is not None:
                 update_fields.append(f"{field} = %s")
                 values.append(data[field])
@@ -979,7 +982,7 @@ class GuitarDataProcessor:
                 values.append(data[field])
         
         # Update other guitar fields
-        for field in ['production_date', 'production_number', 'significance_notes', 
+        for field in ['nickname', 'production_date', 'production_number', 'significance_notes', 
                      'current_estimated_value', 'condition_rating', 'modifications', 'provenance_notes']:
             if data.get(field) is not None:
                 update_fields.append(f"{field} = %s")

@@ -22,6 +22,7 @@ A complete submission requires these top-level properties:
 - `name` (string, 1-100 chars): The official company name as it appears in catalogs or legal documents
 
 **Optional fields:**
+- `display_name` (string, max 50 chars): Short display name for UI (e.g., "Gibson" instead of "Gibson Guitar Corporation")
 - `country` (string, max 50 chars): Country where the company is headquartered
 - `founded_year` (integer, 1800-2030): Year the company was established
 - `website` (string, URI format): Current company website URL
@@ -35,6 +36,7 @@ A complete submission requires these top-level properties:
 {
   "manufacturer": {
     "name": "Fender Musical Instruments Corporation",
+    "display_name": "Fender",
     "country": "USA",
     "founded_year": 1946,
     "website": "https://www.fender.com",
@@ -111,6 +113,7 @@ A complete submission requires these top-level properties:
 - `description` (string, required): Detailed description when model information is incomplete
 
 **Optional fields:**
+- `nickname` (string, max 50 chars): Guitar's nickname (e.g., "Pearly Gates", "Lucille")
 - `year_estimate` (string, max 50 chars): Use format like "circa 1959", "late 1950s", "early 1960s"
 - `serial_number` (string, max 50 chars): Guitar's unique serial number
 - `production_date` (string, date format: YYYY-MM-DD): Specific production date if known
@@ -136,6 +139,7 @@ A complete submission requires these top-level properties:
       "model_name": "Stratocaster",
       "year": 1954
     },
+    "nickname": "The First",
     "serial_number": "01234",
     "production_date": "1954-06-15",
     "significance_level": "historic",
@@ -153,6 +157,7 @@ A complete submission requires these top-level properties:
   "individual_guitar": {
     "manufacturer_name_fallback": "Fender",
     "model_name_fallback": "Stratocaster",
+    "nickname": "Old Reliable",
     "year_estimate": "circa 1959",
     "serial_number": "12345",
     "significance_level": "notable",
@@ -168,6 +173,7 @@ A complete submission requires these top-level properties:
   "individual_guitar": {
     "manufacturer_name_fallback": "Unknown Manufacturer",
     "description": "Vintage electric guitar with single coil pickups, likely from the 1950s",
+    "nickname": "Mystery Guitar",
     "year_estimate": "1950s",
     "significance_level": "notable",
     "current_estimated_value": 15000.00
@@ -418,6 +424,7 @@ Here's a complete example showing all components together:
 {
   "manufacturer": {
     "name": "Fender Musical Instruments Corporation",
+    "display_name": "Fender",
     "country": "USA",
     "founded_year": 1946,
     "website": "https://www.fender.com",
@@ -440,6 +447,7 @@ Here's a complete example showing all components together:
       "model_name": "Stratocaster",
       "year": 1954
     },
+    "nickname": "The First",
     "serial_number": "01234",
     "production_date": "1954-06-15",
     "significance_level": "historic",

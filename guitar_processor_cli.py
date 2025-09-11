@@ -330,6 +330,7 @@ def create_sample_files():
     single_sample = {
         "manufacturer": {
             "name": "Gibson Guitar Corporation",
+            "display_name": "Gibson",
             "country": "USA",
             "founded_year": 1902,
             "status": "active"
@@ -349,6 +350,7 @@ def create_sample_files():
                 "model_name": "Les Paul Standard",
                 "year": 1959
             },
+            "nickname": "The Holy Grail",
             "serial_number": "9-0824",
             "significance_level": "historic",
             "significance_notes": "Famous 1959 Les Paul",
@@ -361,6 +363,7 @@ def create_sample_files():
         {
             "manufacturer": {
                 "name": "Fender Musical Instruments Corporation",
+                "display_name": "Fender",
                 "country": "USA",
                 "founded_year": 1946,
                 "status": "active"
@@ -389,6 +392,7 @@ def create_sample_files():
         {
             "manufacturer": {
                 "name": "Gretsch Company",
+                "display_name": "Gretsch",
                 "country": "USA",
                 "founded_year": 1883,
                 "status": "active"
