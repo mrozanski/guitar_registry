@@ -29,11 +29,13 @@
 CREATE TABLE manufacturers (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     name VARCHAR(100) NOT NULL,
+    display_name VARCHAR(50),
     country VARCHAR(50),
     founded_year INTEGER,
     website VARCHAR(255),
     status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'defunct', 'acquired')),
     notes TEXT,
+    created_by VARCHAR(100),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -64,6 +66,7 @@ CREATE TABLE models (
     msrp_original DECIMAL(10,2),
     currency VARCHAR(3) DEFAULT 'USD',
     description TEXT,
+    created_by VARCHAR(100),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(manufacturer_id, name, year)
@@ -83,6 +86,7 @@ CREATE TABLE individual_guitars (
     description TEXT, -- General description when model info is incomplete
     
     -- Guitar-specific fields
+    nickname VARCHAR(50),
     serial_number VARCHAR(50),
     production_date DATE,
     production_number INTEGER,
@@ -93,6 +97,7 @@ CREATE TABLE individual_guitars (
     condition_rating VARCHAR(20) CHECK (condition_rating IN ('mint', 'excellent', 'very_good', 'good', 'fair', 'poor', 'relic')),
     modifications TEXT,
     provenance_notes TEXT,
+    created_by VARCHAR(100),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     
@@ -119,12 +124,10 @@ CREATE TABLE specifications (
     nut_width_inches DECIMAL(3,2),
     neck_profile VARCHAR(50),
     bridge_type VARCHAR(50),
-    pickup_configuration VARCHAR(20),
-    pickup_brand VARCHAR(50),
-    pickup_model VARCHAR(100),
+    pickup_configuration VARCHAR(150),
     electronics_description TEXT,
     hardware_finish VARCHAR(50),
-    body_finish VARCHAR(100),
+    body_finish TEXT,
     weight_lbs DECIMAL(4,2),
     case_included BOOLEAN DEFAULT FALSE,
     case_type VARCHAR(50),
@@ -134,19 +137,7 @@ CREATE TABLE specifications (
            (model_id IS NULL AND individual_guitar_id IS NOT NULL))
 );
 
--- Colors and finishes
-CREATE TABLE finishes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    model_id UUID REFERENCES models(id),
-    individual_guitar_id UUID REFERENCES individual_guitars(id),
-    finish_name VARCHAR(100) NOT NULL,
-    finish_type VARCHAR(50),
-    color_code VARCHAR(20),
-    rarity VARCHAR(20) CHECK (rarity IN ('common', 'uncommon', 'rare', 'extremely_rare')),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CHECK ((model_id IS NOT NULL AND individual_guitar_id IS NULL) OR 
-           (model_id IS NULL AND individual_guitar_id IS NOT NULL))
-);
+
 
 -- Expert reviews table for attestations
 CREATE TABLE expert_reviews (
@@ -430,12 +421,7 @@ CREATE INDEX idx_specifications_neck_wood ON specifications(neck_wood) WHERE nec
 CREATE INDEX idx_specifications_pickup_config ON specifications(pickup_configuration) WHERE pickup_configuration IS NOT NULL;
 CREATE INDEX idx_specifications_year_range ON specifications(scale_length_inches, num_frets) WHERE scale_length_inches IS NOT NULL;
 
--- Finish indexes
-CREATE INDEX idx_finishes_name_lower ON finishes(LOWER(finish_name));
-CREATE INDEX idx_finishes_type ON finishes(finish_type) WHERE finish_type IS NOT NULL;
-CREATE INDEX idx_finishes_rarity ON finishes(rarity) WHERE rarity IS NOT NULL;
-CREATE INDEX idx_finishes_model ON finishes(model_id) WHERE model_id IS NOT NULL;
-CREATE INDEX idx_finishes_individual ON finishes(individual_guitar_id) WHERE individual_guitar_id IS NOT NULL;
+
 
 -- Expert reviews indexes
 CREATE INDEX idx_expert_reviews_reviewer ON expert_reviews(reviewer_name);

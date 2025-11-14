@@ -28,6 +28,9 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import jsonschema
 from difflib import SequenceMatcher
+from guitar_registry_shared_models.validation import validate_individual_components
+from pydantic import ValidationError
+import importlib.metadata
 
 class MatchLevel(Enum):
     EXACT = "exact"
@@ -40,6 +43,15 @@ class ConflictResolution(Enum):
     REPLACE = "replace"
     KEEP_EXISTING = "keep_existing"
     MANUAL_REVIEW = "manual_review"
+
+def get_created_by_info():
+    """Get the created_by string for records added by the guitar processor."""
+    try:
+        version = importlib.metadata.version('gtr-reg')
+        return f"guitar_processor_cli_v{version}"
+    except Exception:
+        # Fallback if version can't be determined
+        return "guitar_processor_cli_v0.1.0"
 
 @dataclass
 class ValidationResult:
@@ -59,6 +71,7 @@ MANUFACTURER_SCHEMA = {
     "type": "object",
     "properties": {
         "name": {"type": "string", "minLength": 1, "maxLength": 100},
+        "display_name": {"type": ["string", "null"], "maxLength": 50},
         "country": {"type": ["string", "null"], "maxLength": 50},
         "founded_year": {"type": ["integer", "null"], "minimum": 1800, "maximum": 2030},
         "website": {"type": ["string", "null"], "format": "uri"},
@@ -67,6 +80,28 @@ MANUFACTURER_SCHEMA = {
         "logo_source": {"type": ["string", "null"]}
     },
     "required": ["name"],
+    "additionalProperties": False
+}
+
+SPECIFICATIONS_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "body_wood": {"type": ["string", "null"], "maxLength": 50},
+        "neck_wood": {"type": ["string", "null"], "maxLength": 50},
+        "fingerboard_wood": {"type": ["string", "null"], "maxLength": 50},
+        "scale_length_inches": {"type": ["number", "null"], "minimum": 20, "maximum": 30},
+        "num_frets": {"type": ["integer", "null"], "minimum": 12, "maximum": 36},
+        "nut_width_inches": {"type": ["number", "null"], "minimum": 1.0, "maximum": 2.5},
+        "neck_profile": {"type": ["string", "null"], "maxLength": 50},
+        "bridge_type": {"type": ["string", "null"], "maxLength": 50},
+        "pickup_configuration": {"type": ["string", "null"], "maxLength": 150},
+        "electronics_description": {"type": ["string", "null"]},
+        "hardware_finish": {"type": ["string", "null"], "maxLength": 50},
+        "body_finish": {"type": ["string", "null"]}, # TEXT field allows longer finish descriptions with multiple colors/variations
+        "weight_lbs": {"type": ["number", "null"], "minimum": 1, "maximum": 20},
+        "case_included": {"type": ["boolean", "null"]},
+        "case_type": {"type": ["string", "null"], "maxLength": 50}
+    },
     "additionalProperties": False
 }
 
@@ -84,8 +119,17 @@ MODEL_SCHEMA = {
         "msrp_original": {"type": ["number", "null"], "minimum": 0},
         "currency": {"type": "string", "default": "USD", "maxLength": 3},
         "description": {"type": ["string", "null"]},
-        "specifications": {"type": ["object", "null"]},  # Will be processed separately
-        "finishes": {"type": ["array", "null"]}  # Will be processed separately
+        "specifications": {
+            "oneOf": [
+                {"type": "null"},
+                SPECIFICATIONS_SCHEMA,
+                {
+                    "type": "array",
+                    "items": SPECIFICATIONS_SCHEMA,
+                    "minItems": 1
+                }
+            ]
+        }  # Single specification object OR array of specification objects
     },
     "required": ["manufacturer_name", "name", "year"],
     "additionalProperties": False
@@ -112,6 +156,7 @@ INDIVIDUAL_GUITAR_SCHEMA = {
         "description": {"type": ["string", "null"]},  # General description when model info is incomplete
         
         # Guitar-specific fields
+        "nickname": {"type": ["string", "null"], "maxLength": 50},
         "serial_number": {"type": ["string", "null"], "maxLength": 50},
         "production_date": {"type": ["string", "null"], "format": "date"},
         "production_number": {"type": ["integer", "null"]},
@@ -134,56 +179,9 @@ INDIVIDUAL_GUITAR_SCHEMA = {
     "additionalProperties": False
 }
 
-SPECIFICATIONS_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "body_wood": {"type": ["string", "null"], "maxLength": 50},
-        "neck_wood": {"type": ["string", "null"], "maxLength": 50},
-        "fingerboard_wood": {"type": ["string", "null"], "maxLength": 50},
-        "scale_length_inches": {"type": ["number", "null"], "minimum": 20, "maximum": 30},
-        "num_frets": {"type": ["integer", "null"], "minimum": 12, "maximum": 36},
-        "nut_width_inches": {"type": ["number", "null"], "minimum": 1.0, "maximum": 2.5},
-        "neck_profile": {"type": ["string", "null"], "maxLength": 50},
-        "bridge_type": {"type": ["string", "null"], "maxLength": 50},
-        "pickup_configuration": {"type": ["string", "null"], "maxLength": 20},
-        "pickup_brand": {"type": ["string", "null"], "maxLength": 50},
-        "pickup_model": {"type": ["string", "null"], "maxLength": 100},
-        "electronics_description": {"type": ["string", "null"]},
-        "hardware_finish": {"type": ["string", "null"], "maxLength": 50},
-        "body_finish": {"type": ["string", "null"], "maxLength": 100},
-        "weight_lbs": {"type": ["number", "null"], "minimum": 1, "maximum": 20},
-        "case_included": {"type": ["boolean", "null"]},
-        "case_type": {"type": ["string", "null"], "maxLength": 50}
-    },
-    "additionalProperties": False
-}
 
-FINISH_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "finish_name": {"type": "string", "minLength": 1, "maxLength": 100},
-        "finish_type": {"type": ["string", "null"], "maxLength": 50},
-        "color_code": {"type": ["string", "null"], "maxLength": 20},
-        "rarity": {"type": ["string", "null"], "enum": ["common", "uncommon", "rare", "extremely_rare"]}
-    },
-    "required": ["finish_name"],
-    "additionalProperties": False
-}
 
-SOURCE_ATTRIBUTION_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "source_name": {"type": "string", "minLength": 1, "maxLength": 100},
-        "source_type": {"type": "string", "enum": ["manufacturer_catalog", "auction_record", "museum", "book", "website", "manual_entry", "price_guide"], "default": "website"},
-        "url": {"type": ["string", "null"], "format": "uri", "maxLength": 500},
-        "isbn": {"type": ["string", "null"], "maxLength": 20},
-        "publication_date": {"type": ["string", "null"], "format": "date"},
-        "reliability_score": {"type": ["integer", "null"], "minimum": 1, "maximum": 10},
-        "notes": {"type": ["string", "null"]}
-    },
-    "required": ["source_name"],
-    "additionalProperties": False
-}
+
 
 class GuitarDataValidator:
     def __init__(self, db_connection):
@@ -369,12 +367,17 @@ class GuitarDataValidator:
     
     def validate_manufacturer(self, data: Dict) -> ValidationResult:
         """Validate and check uniqueness for manufacturer data."""
-        # Schema validation
         try:
-            jsonschema.validate(data, MANUFACTURER_SCHEMA)
-        except jsonschema.ValidationError as e:
+            # validate_individual_components expects the full data structure with 'manufacturer' key
+            full_data = {'manufacturer': data}
+            validated_components = validate_individual_components(full_data)
+            manufacturer = validated_components['manufacturer']
+            print(f"✅ Validated: {manufacturer.name}")
+            print(f"   Status: {manufacturer.status}")  # Defaults to "active"
+    
+        except ValidationError as e:
+            print(f"❌ Validation failed: {e}")
             return ValidationResult(False, "invalid_schema", conflicts=[str(e)])
-        
         # Find matches
         matches = self.find_manufacturer_matches(data)
         
@@ -454,14 +457,7 @@ class GuitarDataValidator:
             )
         else:
             return ValidationResult(True, "insert", confidence=1.0)
-    def validate_source_attribution(self, data: Dict) -> ValidationResult:
-        """Validate source attribution data."""
-        try:
-            jsonschema.validate(data, SOURCE_ATTRIBUTION_SCHEMA)
-        except jsonschema.ValidationError as e:
-            return ValidationResult(False, "invalid_schema", conflicts=[str(e)])
-        
-        return ValidationResult(True, "insert", confidence=1.0)
+
     
     def validate_individual_guitar(self, data: Dict) -> ValidationResult:
         """Validate and check uniqueness for individual guitar data."""
@@ -534,8 +530,7 @@ class GuitarDataProcessor:
         {
             "manufacturer": {...},
             "model": {...},
-            "individual_guitar": {...} (optional),
-            "source_attribution": {...}
+            "individual_guitar": {...} (optional)
         }
         
         Batch submission format:
@@ -582,69 +577,72 @@ class GuitarDataProcessor:
         }
         
         try:
-            # Start transaction for the entire batch
-            with self.db:
-                for idx, single_submission in enumerate(submissions):
-                    try:
-                        result = self._process_single_submission(single_submission, idx)
-                        batch_results["results"].append(result)
-                        batch_results["processed_count"] += 1
-                        
-                        # Update summary statistics
-                        if result["success"]:
-                            batch_results["summary"]["successful"] += 1
-                            # Aggregate action counts
-                            for action in result.get("actions_taken", []):
-                                if "Manufacturer insert" in action:
-                                    batch_results["summary"]["actions_taken"]["manufacturers_inserted"] += 1
-                                elif "Manufacturer update" in action:
-                                    batch_results["summary"]["actions_taken"]["manufacturers_updated"] += 1
-                                elif "Model insert" in action:
-                                    batch_results["summary"]["actions_taken"]["models_inserted"] += 1
-                                elif "Model update" in action:
-                                    batch_results["summary"]["actions_taken"]["models_updated"] += 1
-                                elif "Guitar insert" in action:
-                                    batch_results["summary"]["actions_taken"]["guitars_inserted"] += 1
-                                elif "Guitar update" in action:
-                                    batch_results["summary"]["actions_taken"]["guitars_updated"] += 1
-                        else:
-                            batch_results["summary"]["failed"] += 1
-                            batch_results["success"] = False  # Mark entire batch as having failures
-                        
-                        if result.get("manual_review_needed"):
-                            batch_results["summary"]["manual_review_needed"] += 1
-                            
-                    except Exception as e:
-                        error_result = {
-                            "index": idx,
-                            "success": False,
-                            "error": f"Processing error: {str(e)}",
-                            "submission_preview": str(single_submission)[:100] + "..." if len(str(single_submission)) > 100 else str(single_submission)
-                        }
-                        batch_results["results"].append(error_result)
-                        batch_results["summary"]["failed"] += 1
-                        batch_results["success"] = False
-                
-                # If any failures and this is a batch, consider rollback strategy
-                if not batch_results["success"] and is_batch:
-                    failed_count = batch_results["summary"]["failed"]
-                    total_count = batch_results["total_count"]
-                    failure_rate = failed_count / total_count
+            # Start transaction for the entire batch (manual transaction management)
+            # Note: We don't use 'with self.db:' context manager because we need
+            # conditional rollback based on failure rate, which conflicts with
+            # the context manager's automatic commit-on-exit behavior.
+            for idx, single_submission in enumerate(submissions):
+                try:
+                    result = self._process_single_submission(single_submission, idx)
+                    batch_results["results"].append(result)
+                    batch_results["processed_count"] += 1
                     
-                    # If more than 50% failed, rollback the entire batch
-                    if failure_rate > 0.5:
-                        self.db.rollback()
-                        batch_results["rolled_back"] = True
-                        batch_results["rollback_reason"] = f"High failure rate: {failed_count}/{total_count} submissions failed"
+                    # Update summary statistics
+                    if result["success"]:
+                        batch_results["summary"]["successful"] += 1
+                        # Aggregate action counts
+                        for action in result.get("actions_taken", []):
+                            if "Manufacturer insert" in action:
+                                batch_results["summary"]["actions_taken"]["manufacturers_inserted"] += 1
+                            elif "Manufacturer update" in action:
+                                batch_results["summary"]["actions_taken"]["manufacturers_updated"] += 1
+                            elif "Model insert" in action:
+                                batch_results["summary"]["actions_taken"]["models_inserted"] += 1
+                            elif "Model update" in action:
+                                batch_results["summary"]["actions_taken"]["models_updated"] += 1
+                            elif "Guitar insert" in action:
+                                batch_results["summary"]["actions_taken"]["guitars_inserted"] += 1
+                            elif "Guitar update" in action:
+                                batch_results["summary"]["actions_taken"]["guitars_updated"] += 1
                     else:
-                        # Partial success - commit what worked
-                        self.db.commit()
-                        batch_results["partial_success"] = True
+                        batch_results["summary"]["failed"] += 1
+                        batch_results["success"] = False  # Mark entire batch as having failures
+                    
+                    if result.get("manual_review_needed"):
+                        batch_results["summary"]["manual_review_needed"] += 1
+                        
+                except Exception as e:
+                    error_result = {
+                        "index": idx,
+                        "success": False,
+                        "error": f"Processing error: {str(e)}",
+                        "submission_preview": str(single_submission)[:100] + "..." if len(str(single_submission)) > 100 else str(single_submission)
+                    }
+                    batch_results["results"].append(error_result)
+                    batch_results["summary"]["failed"] += 1
+                    batch_results["success"] = False
+            
+            # Transaction decision logic: commit or rollback based on results
+            if not batch_results["success"] and is_batch:
+                failed_count = batch_results["summary"]["failed"]
+                total_count = batch_results["total_count"]
+                failure_rate = failed_count / total_count
+                
+                # If more than 50% failed, rollback the entire batch
+                if failure_rate > 0.5:
+                    self.db.rollback()
+                    batch_results["rolled_back"] = True
+                    batch_results["rollback_reason"] = f"High failure rate: {failed_count}/{total_count} submissions failed"
                 else:
-                    # All successful or single submission
+                    # Partial success - commit what worked
                     self.db.commit()
+                    batch_results["partial_success"] = True
+            else:
+                # All successful or single submission
+                self.db.commit()
         
         except Exception as e:
+            # Rollback on any unexpected exception during batch processing
             self.db.rollback()
             batch_results["success"] = False
             batch_results["error"] = f"Batch processing error: {str(e)}"
@@ -710,16 +708,10 @@ class GuitarDataProcessor:
                     
                     # Process model specifications if present
                     if submission_data['model'].get('specifications'):
-                        spec_id = self._insert_specifications(submission_data['model']['specifications'], 'model', model_id)
-                        results['ids_created']['model_specifications'] = spec_id
+                        spec_ids = self._insert_specifications(submission_data['model']['specifications'], 'model', model_id)
+                        results['ids_created']['model_specifications'] = spec_ids
                     
-                    # Process model finishes if present
-                    if submission_data['model'].get('finishes'):
-                        finish_ids = []
-                        for finish_data in submission_data['model']['finishes']:
-                            finish_id = self._insert_finish(finish_data, 'model', model_id)
-                            finish_ids.append(finish_id)
-                        results['ids_created']['model_finishes'] = finish_ids
+
                         
                 elif model_result.action == "update":
                     model_id = model_result.target_id
@@ -757,11 +749,7 @@ class GuitarDataProcessor:
                 
                 results['actions_taken'].append(f"Guitar {guitar_result.action}")
             
-            # Process source attribution if present
-            if 'source_attribution' in submission_data:
-                source_id = self._process_source_attribution(submission_data['source_attribution'])
-                results['ids_created']['source'] = source_id
-                results['actions_taken'].append("Source attribution processed")
+
             
             results['success'] = True
             return results
@@ -801,15 +789,16 @@ class GuitarDataProcessor:
         query = """
             INSERT INTO models (manufacturer_id, product_line_id, name, year, production_type, 
                               production_start_date, production_end_date, estimated_production_quantity,
-                              msrp_original, currency, description)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                              msrp_original, currency, description, created_by)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
             manufacturer_id, product_line_id, data.get('name'), data.get('year'),
             data.get('production_type', 'mass'), data.get('production_start_date'),
             data.get('production_end_date'), data.get('estimated_production_quantity'),
-            data.get('msrp_original'), data.get('currency', 'USD'), data.get('description')
+            data.get('msrp_original'), data.get('currency', 'USD'), data.get('description'),
+            get_created_by_info()
         )
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
@@ -822,10 +811,10 @@ class GuitarDataProcessor:
         query = """
             INSERT INTO individual_guitars (
                 model_id, manufacturer_name_fallback, model_name_fallback, year_estimate, description,
-                serial_number, production_date, production_number, significance_level, significance_notes, 
-                current_estimated_value, condition_rating, modifications, provenance_notes
+                nickname, serial_number, production_date, production_number, significance_level, significance_notes, 
+                current_estimated_value, condition_rating, modifications, provenance_notes, created_by
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
@@ -834,6 +823,7 @@ class GuitarDataProcessor:
             data.get('model_name_fallback'),
             data.get('year_estimate'), 
             data.get('description'),
+            data.get('nickname'),
             data.get('serial_number'), 
             data.get('production_date'),
             data.get('production_number'), 
@@ -842,7 +832,8 @@ class GuitarDataProcessor:
             data.get('current_estimated_value'),
             data.get('condition_rating'), 
             data.get('modifications'), 
-            data.get('provenance_notes')
+            data.get('provenance_notes'),
+            get_created_by_info()
         )
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
@@ -850,13 +841,14 @@ class GuitarDataProcessor:
     def _insert_manufacturer(self, data: Dict) -> str:
         """Insert new manufacturer and return ID."""
         query = """
-            INSERT INTO manufacturers (name, country, founded_year, website, status, notes)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO manufacturers (name, display_name, country, founded_year, website, status, notes, created_by)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
-            data.get('name'), data.get('country'), data.get('founded_year'),
-            data.get('website'), data.get('status', 'active'), data.get('notes')
+            data.get('name'), data.get('display_name'), data.get('country'), data.get('founded_year'),
+            data.get('website'), data.get('status', 'active'), data.get('notes'), 
+            get_created_by_info()
         )
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
@@ -867,7 +859,7 @@ class GuitarDataProcessor:
         update_fields = []
         values = []
         
-        for field in ['country', 'founded_year', 'website', 'status', 'notes']:
+        for field in ['display_name', 'country', 'founded_year', 'website', 'status', 'notes']:
             if data.get(field) is not None:
                 update_fields.append(f"{field} = %s")
                 values.append(data[field])
@@ -881,8 +873,14 @@ class GuitarDataProcessor:
             """
             self.cursor.execute(query, values)
     
-    def _insert_specifications(self, data: Dict, target_type: str, target_id: str) -> str:
-        """Insert specifications for either a model or individual guitar."""
+    def _insert_specifications(self, data, target_type: str, target_id: str):
+        """Insert specifications for either a model or individual guitar.
+        
+        Args:
+            data: Either a single Dict or List[Dict] (both supported for models and individual guitars)
+            target_type: 'model' or 'individual_guitar'
+            target_id: The ID of the target entity
+        """
         if target_type == 'model':
             model_id = target_id
             individual_guitar_id = None
@@ -890,45 +888,40 @@ class GuitarDataProcessor:
             model_id = None
             individual_guitar_id = target_id
         
+        # Handle both single specification object and array
+        if isinstance(data, list):
+            # Multiple specifications (array format)
+            spec_ids = []
+            for spec_data in data:
+                spec_id = self._insert_single_specification(spec_data, model_id, individual_guitar_id)
+                spec_ids.append(spec_id)
+            return spec_ids
+        else:
+            # Single specification object
+            return self._insert_single_specification(data, model_id, individual_guitar_id)
+    
+    def _insert_single_specification(self, spec_data: Dict, model_id: str, individual_guitar_id: str) -> str:
+        """Insert a single specification record."""
         query = """
             INSERT INTO specifications (model_id, individual_guitar_id, body_wood, neck_wood, fingerboard_wood,
                                      scale_length_inches, num_frets, nut_width_inches, neck_profile, bridge_type,
-                                     pickup_configuration, pickup_brand, pickup_model, electronics_description,
+                                     pickup_configuration, electronics_description,
                                      hardware_finish, body_finish, weight_lbs, case_included, case_type)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         values = (
-            model_id, individual_guitar_id, data.get('body_wood'), data.get('neck_wood'),
-            data.get('fingerboard_wood'), data.get('scale_length_inches'), data.get('num_frets'),
-            data.get('nut_width_inches'), data.get('neck_profile'), data.get('bridge_type'),
-            data.get('pickup_configuration'), data.get('pickup_brand'), data.get('pickup_model'),
-            data.get('electronics_description'), data.get('hardware_finish'), data.get('body_finish'),
-            data.get('weight_lbs'), data.get('case_included'), data.get('case_type')
+            model_id, individual_guitar_id, spec_data.get('body_wood'), spec_data.get('neck_wood'),
+            spec_data.get('fingerboard_wood'), spec_data.get('scale_length_inches'), spec_data.get('num_frets'),
+            spec_data.get('nut_width_inches'), spec_data.get('neck_profile'), spec_data.get('bridge_type'),
+            spec_data.get('pickup_configuration'),
+            spec_data.get('electronics_description'), spec_data.get('hardware_finish'), spec_data.get('body_finish'),
+            spec_data.get('weight_lbs'), spec_data.get('case_included'), spec_data.get('case_type')
         )
         self.cursor.execute(query, values)
         return self.cursor.fetchone()['id']
     
-    def _insert_finish(self, data: Dict, target_type: str, target_id: str) -> str:
-        """Insert finish for either a model or individual guitar."""
-        if target_type == 'model':
-            model_id = target_id
-            individual_guitar_id = None
-        else:
-            model_id = None
-            individual_guitar_id = target_id
-        
-        query = """
-            INSERT INTO finishes (model_id, individual_guitar_id, finish_name, finish_type, color_code, rarity)
-            VALUES (%s, %s, %s, %s, %s, %s)
-            RETURNING id
-        """
-        values = (
-            model_id, individual_guitar_id, data.get('finish_name'),
-            data.get('finish_type'), data.get('color_code'), data.get('rarity')
-        )
-        self.cursor.execute(query, values)
-        return self.cursor.fetchone()['id']
+
     
     def _update_model(self, model_id: str, data: Dict):
         """Update existing model with new data."""
@@ -970,7 +963,7 @@ class GuitarDataProcessor:
                 values.append(data[field])
         
         # Update other guitar fields
-        for field in ['production_date', 'production_number', 'significance_notes', 
+        for field in ['nickname', 'production_date', 'production_number', 'significance_notes', 
                      'current_estimated_value', 'condition_rating', 'modifications', 'provenance_notes']:
             if data.get(field) is not None:
                 update_fields.append(f"{field} = %s")
@@ -984,53 +977,7 @@ class GuitarDataProcessor:
                 WHERE id = %s
             """
             self.cursor.execute(query, values)
-    def _process_source_attribution(self, data: Dict) -> str:
-        """Process source attribution and return source ID."""
-        # Validate the source attribution data first
-        source_result = self.validator.validate_source_attribution(data)
-        if not source_result.is_valid:
-            raise ValueError(f"Invalid source attribution: {source_result.conflicts}")
-        
-        # Check if source already exists (avoid duplicates)
-        source_name = data.get('source_name')
-        url = data.get('url')
-        
-        if url:
-            # Check by name and URL
-            self.cursor.execute(
-                "SELECT id FROM data_sources WHERE source_name = %s AND url = %s",
-                (source_name, url)
-            )
-        else:
-            # Check by name only if no URL provided
-            self.cursor.execute(
-                "SELECT id FROM data_sources WHERE source_name = %s AND url IS NULL",
-                (source_name,)
-            )
-        
-        existing = self.cursor.fetchone()
-        
-        if existing:
-            return existing['id']
-        
-        # Insert new source
-        query = """
-            INSERT INTO data_sources (source_name, source_type, url, isbn, 
-                                    publication_date, reliability_score, notes)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            RETURNING id
-        """
-        values = (
-            data.get('source_name'),
-            data.get('source_type', 'website'),
-            data.get('url'),
-            data.get('isbn'),
-            data.get('publication_date'),
-            data.get('reliability_score'),
-            data.get('notes')
-        )
-        self.cursor.execute(query, values)
-        return self.cursor.fetchone()['id']
+
 
 # Example usage
 def example_usage():
@@ -1063,11 +1010,6 @@ def example_usage():
             "significance_level": "historic",
             "significance_notes": "Owned by Jimmy Page",
             "current_estimated_value": 500000.00
-        },
-        "source_attribution": {
-            "source_name": "Guitar World Magazine",
-            "url": "https://example.com/article",
-            "confidence_level": "high"
         }
     }
     
@@ -1116,11 +1058,6 @@ def example_usage():
                 "production_type": "mass",
                 "msrp_original": 189.50,
                 "currency": "USD"
-            },
-            "source_attribution": {
-                "source_name": "Fender Catalog 1950",
-                "source_type": "manufacturer_catalog",
-                "reliability_score": 9
             }
         }
     ]

@@ -54,7 +54,7 @@ python main.py
 
 ### Data Flow
 
-1. **Input**: JSON files containing manufacturer, model, individual guitar, and source attribution data
+1. **Input**: JSON files containing manufacturer, model, individual guitar, and created_by field data (VARCHAR(100), e.g., "guitar_processor_cli_v1.0.0" or user identifier)
 2. **Validation**: JSON schema validation using jsonschema library
 3. **Duplicate Detection**: Fuzzy string matching using PostgreSQL trigrams and Python difflib
 4. **Database Operations**: PostgreSQL with UUID v7 primary keys and foreign key relationships
@@ -75,7 +75,7 @@ python main.py
 - **Dependency Resolution**: Automatically resolves manufacturer → product line → model → individual guitar relationships
 - **Fuzzy Matching**: Uses PostgreSQL trigrams and confidence scoring (95%+ auto-merge, 85-95% manual review)
 - **Transaction Safety**: Batch processing with rollback on failures
-- **Source Attribution**: Complete data lineage tracking with reliability scoring
+- **created_by field**: Tracks data origin using created_by field (VARCHAR(100)) for complete data lineage, storing identifiers like "guitar_processor_cli_v1.0.0" or user names
 
 ### Data Formats
 
@@ -83,7 +83,7 @@ Guitar data is submitted as JSON with nested structures:
 - `manufacturer`: Company information
 - `model`: Model specifications and production details
 - `individual_guitar`: Specific instrument with serial numbers and significance
-- `source_attribution`: Data source and reliability information
+
 
 See `sample_single.json` and `sample_batch.json` for examples.
 
