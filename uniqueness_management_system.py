@@ -599,69 +599,72 @@ class GuitarDataProcessor:
         }
         
         try:
-            # Start transaction for the entire batch
-            with self.db:
-                for idx, single_submission in enumerate(submissions):
-                    try:
-                        result = self._process_single_submission(single_submission, idx)
-                        batch_results["results"].append(result)
-                        batch_results["processed_count"] += 1
-                        
-                        # Update summary statistics
-                        if result["success"]:
-                            batch_results["summary"]["successful"] += 1
-                            # Aggregate action counts
-                            for action in result.get("actions_taken", []):
-                                if "Manufacturer insert" in action:
-                                    batch_results["summary"]["actions_taken"]["manufacturers_inserted"] += 1
-                                elif "Manufacturer update" in action:
-                                    batch_results["summary"]["actions_taken"]["manufacturers_updated"] += 1
-                                elif "Model insert" in action:
-                                    batch_results["summary"]["actions_taken"]["models_inserted"] += 1
-                                elif "Model update" in action:
-                                    batch_results["summary"]["actions_taken"]["models_updated"] += 1
-                                elif "Guitar insert" in action:
-                                    batch_results["summary"]["actions_taken"]["guitars_inserted"] += 1
-                                elif "Guitar update" in action:
-                                    batch_results["summary"]["actions_taken"]["guitars_updated"] += 1
-                        else:
-                            batch_results["summary"]["failed"] += 1
-                            batch_results["success"] = False  # Mark entire batch as having failures
-                        
-                        if result.get("manual_review_needed"):
-                            batch_results["summary"]["manual_review_needed"] += 1
-                            
-                    except Exception as e:
-                        error_result = {
-                            "index": idx,
-                            "success": False,
-                            "error": f"Processing error: {str(e)}",
-                            "submission_preview": str(single_submission)[:100] + "..." if len(str(single_submission)) > 100 else str(single_submission)
-                        }
-                        batch_results["results"].append(error_result)
-                        batch_results["summary"]["failed"] += 1
-                        batch_results["success"] = False
-                
-                # If any failures and this is a batch, consider rollback strategy
-                if not batch_results["success"] and is_batch:
-                    failed_count = batch_results["summary"]["failed"]
-                    total_count = batch_results["total_count"]
-                    failure_rate = failed_count / total_count
+            # Start transaction for the entire batch (manual transaction management)
+            # Note: We don't use 'with self.db:' context manager because we need
+            # conditional rollback based on failure rate, which conflicts with
+            # the context manager's automatic commit-on-exit behavior.
+            for idx, single_submission in enumerate(submissions):
+                try:
+                    result = self._process_single_submission(single_submission, idx)
+                    batch_results["results"].append(result)
+                    batch_results["processed_count"] += 1
                     
-                    # If more than 50% failed, rollback the entire batch
-                    if failure_rate > 0.5:
-                        self.db.rollback()
-                        batch_results["rolled_back"] = True
-                        batch_results["rollback_reason"] = f"High failure rate: {failed_count}/{total_count} submissions failed"
+                    # Update summary statistics
+                    if result["success"]:
+                        batch_results["summary"]["successful"] += 1
+                        # Aggregate action counts
+                        for action in result.get("actions_taken", []):
+                            if "Manufacturer insert" in action:
+                                batch_results["summary"]["actions_taken"]["manufacturers_inserted"] += 1
+                            elif "Manufacturer update" in action:
+                                batch_results["summary"]["actions_taken"]["manufacturers_updated"] += 1
+                            elif "Model insert" in action:
+                                batch_results["summary"]["actions_taken"]["models_inserted"] += 1
+                            elif "Model update" in action:
+                                batch_results["summary"]["actions_taken"]["models_updated"] += 1
+                            elif "Guitar insert" in action:
+                                batch_results["summary"]["actions_taken"]["guitars_inserted"] += 1
+                            elif "Guitar update" in action:
+                                batch_results["summary"]["actions_taken"]["guitars_updated"] += 1
                     else:
-                        # Partial success - commit what worked
-                        self.db.commit()
-                        batch_results["partial_success"] = True
+                        batch_results["summary"]["failed"] += 1
+                        batch_results["success"] = False  # Mark entire batch as having failures
+                    
+                    if result.get("manual_review_needed"):
+                        batch_results["summary"]["manual_review_needed"] += 1
+                        
+                except Exception as e:
+                    error_result = {
+                        "index": idx,
+                        "success": False,
+                        "error": f"Processing error: {str(e)}",
+                        "submission_preview": str(single_submission)[:100] + "..." if len(str(single_submission)) > 100 else str(single_submission)
+                    }
+                    batch_results["results"].append(error_result)
+                    batch_results["summary"]["failed"] += 1
+                    batch_results["success"] = False
+            
+            # Transaction decision logic: commit or rollback based on results
+            if not batch_results["success"] and is_batch:
+                failed_count = batch_results["summary"]["failed"]
+                total_count = batch_results["total_count"]
+                failure_rate = failed_count / total_count
+                
+                # If more than 50% failed, rollback the entire batch
+                if failure_rate > 0.5:
+                    self.db.rollback()
+                    batch_results["rolled_back"] = True
+                    batch_results["rollback_reason"] = f"High failure rate: {failed_count}/{total_count} submissions failed"
                 else:
-                    # All successful or single submission
+                    # Partial success - commit what worked
                     self.db.commit()
+                    batch_results["partial_success"] = True
+            else:
+                # All successful or single submission
+                self.db.commit()
         
         except Exception as e:
+            # Rollback on any unexpected exception during batch processing
             self.db.rollback()
             batch_results["success"] = False
             batch_results["error"] = f"Batch processing error: {str(e)}"
