@@ -179,28 +179,6 @@ INDIVIDUAL_GUITAR_SCHEMA = {
     "additionalProperties": False
 }
 
-SPECIFICATIONS_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "body_wood": {"type": ["string", "null"], "maxLength": 50},
-        "neck_wood": {"type": ["string", "null"], "maxLength": 50},
-        "fingerboard_wood": {"type": ["string", "null"], "maxLength": 50},
-        "scale_length_inches": {"type": ["number", "null"], "minimum": 20, "maximum": 30},
-        "num_frets": {"type": ["integer", "null"], "minimum": 12, "maximum": 36},
-        "nut_width_inches": {"type": ["number", "null"], "minimum": 1.0, "maximum": 2.5},
-        "neck_profile": {"type": ["string", "null"], "maxLength": 50},
-        "bridge_type": {"type": ["string", "null"], "maxLength": 50},
-        "pickup_configuration": {"type": ["string", "null"], "maxLength": 150},
-        "electronics_description": {"type": ["string", "null"]},
-        "hardware_finish": {"type": ["string", "null"], "maxLength": 50},
-        "body_finish": {"type": ["string", "null"]}, # TEXT field allows longer finish descriptions with multiple colors/variations
-        "weight_lbs": {"type": ["number", "null"], "minimum": 1, "maximum": 20},
-        "case_included": {"type": ["boolean", "null"]},
-        "case_type": {"type": ["string", "null"], "maxLength": 50}
-    },
-    "additionalProperties": False
-}
-
 
 
 
